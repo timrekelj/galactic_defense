@@ -2,7 +2,7 @@ name: Galactic Defense deploy
 on:
   push:
     branches: 
-     - 'master'
+     - 'main'
 jobs:
   development-deploy:
     runs-on: [self-hosted]
