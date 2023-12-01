@@ -16,7 +16,7 @@ void main() {
     vec3 L = normalize(uLightPosition - vPosition);
     vec3 N = normalize(vNormal);
     float lambert = max(dot(N, L), 0.0);
-    float ambient = 0.3;
+    float ambient = 0.4;
 
     vec4 baseColor = texture(uBaseTexture, vTexCoord);
     oColor = uBaseFactor * baseColor * vec4(vec3(lambert) + ambient, 1);

@@ -2,7 +2,6 @@
 
 import { GLTFLoader } from './common/engine/loaders/GLTFLoader.js'
 import { LitRenderer } from './common/engine/renderers/LitRenderer.js'
-import { UnlitRenderer } from './common/engine/renderers/UnlitRenderer.js'
 import { ResizeSystem } from './common/engine/systems/ResizeSystem.js'
 import { UpdateSystem } from './common/engine/systems/UpdateSystem.js'
 import { TurntableController } from './common/engine/controllers/TurntableController.js'
@@ -17,11 +16,11 @@ import {
 
 const canvas = document.querySelector('canvas');
 
-const renderer = new UnlitRenderer(canvas);
+const renderer = new LitRenderer(canvas);
 await renderer.initialize();
 
 const loader = new GLTFLoader();
-await loader.load('./assets/environment/floating_island.gltf');
+await loader.load('./assets/island/floating_island.gltf');
 
 const scene = loader.loadScene(loader.defaultScene);
 if (!scene) { throw new Error('A default scene is required'); }
@@ -30,13 +29,18 @@ const camera = scene.find(node => node.getComponentOfType(Camera));
 if (!camera) { throw new Error('A camera is required'); }
 
 camera.addComponent(new TurntableController(camera, document.body, {
-    distance: 20
+    distance: 100,
 }));
 
-const light = new Node();
-light.addComponent(new Transform({ translation: [0, 2, 0] }));
-light.addComponent(new Light());
-scene.addChild(light);
+const light01 = new Node();
+light01.addComponent(new Transform({ translation: [50, 100, 100] }));
+light01.addComponent(new Light());
+scene.addChild(light01);
+
+const light02 = new Node();
+light02.addComponent(new Transform({ translation: [-50, 50, 100] }));
+light02.addComponent(new Light());
+scene.addChild(light02);
 
 
 function update(t, dt) {

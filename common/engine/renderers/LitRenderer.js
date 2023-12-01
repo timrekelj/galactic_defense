@@ -23,16 +23,16 @@ export class LitRenderer extends BaseRenderer {
     async initialize() {
         const gl = this.gl;
 
-        const unlitVertexShader = await fetch(new URL('../shaders/lit.vs', import.meta.url))
+        const litVertexShader = await fetch(new URL('../shaders/lit.v.glsl', import.meta.url))
             .then(response => response.text());
 
-        const unlitFragmentShader = await fetch(new URL('../shaders/lit.fs', import.meta.url))
+        const litFragmentShader = await fetch(new URL('../shaders/lit.f.glsl', import.meta.url))
             .then(response => response.text());
 
         this.programs = WebGL.buildPrograms(gl, {
-            unlit: {
-                vertex: unlitVertexShader,
-                fragment: unlitFragmentShader,
+            lit: {
+                vertex: litVertexShader,
+                fragment: litFragmentShader,
             },
         });
 
@@ -47,7 +47,7 @@ export class LitRenderer extends BaseRenderer {
         gl.viewport(0, 0, gl.drawingBufferWidth, gl.drawingBufferHeight);
         gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
 
-        const { program, uniforms } = this.programs.unlit;
+        const { program, uniforms } = this.programs.lit;
         gl.useProgram(program);
 
         // Setup camera
@@ -69,7 +69,7 @@ export class LitRenderer extends BaseRenderer {
     renderNode(node, modelMatrix = mat4.create()) {
         const gl = this.gl;
 
-        const { program, uniforms } = this.programs.unlit;
+        const { program, uniforms } = this.programs.lit;
 
         const localMatrix = getLocalModelMatrix(node);
         modelMatrix = mat4.mul(mat4.create(), modelMatrix, localMatrix);
@@ -93,7 +93,7 @@ export class LitRenderer extends BaseRenderer {
     renderPrimitive(primitive) {
         const gl = this.gl;
 
-        const { program, uniforms } = this.programs.unlit;
+        const { program, uniforms } = this.programs.lit;
 
         const vao = this.prepareMesh(primitive.mesh);
         gl.bindVertexArray(vao);
