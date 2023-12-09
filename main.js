@@ -1,11 +1,15 @@
-//? START LIVE SERVER: python -m http.server 3000
+//?: START LIVE SERVER: python -m http.server 3000
+// TODO: skybox
 
 import { GLTFLoader } from './common/engine/loaders/GLTFLoader.js'
-import { LitRenderer } from './common/engine/renderers/LitRenderer.js'
+import { Renderer } from './common/engine/renderers/Renderer.js'
 import { ResizeSystem } from './common/engine/systems/ResizeSystem.js'
 import { UpdateSystem } from './common/engine/systems/UpdateSystem.js'
 import { TurntableController } from './common/engine/controllers/TurntableController.js'
-import { Light } from './light.js'
+
+import { Spot } from './common/engine/lights/Spot.js'
+import { Sun } from './common/engine/lights/Sun.js'
+import { Point } from './common/engine/lights/Point.js'
 
 import {
     Camera,
@@ -16,10 +20,13 @@ import {
 
 const canvas = document.querySelector('canvas');
 
-const renderer = new LitRenderer(canvas);
+const renderer = new Renderer(canvas);
 await renderer.initialize();
 
 const loader = new GLTFLoader();
+console.log(loader)
+
+// TODO: render multiple nodes from one .gltf
 await loader.load('./assets/island/floating_island.gltf');
 
 const scene = loader.loadScene(loader.defaultScene);
@@ -32,16 +39,25 @@ camera.addComponent(new TurntableController(camera, document.body, {
     distance: 100,
 }));
 
-const light01 = new Node();
-light01.addComponent(new Transform({ translation: [50, 100, 100] }));
-light01.addComponent(new Light());
-scene.addChild(light01);
-
-const light02 = new Node();
-light02.addComponent(new Transform({ translation: [-50, 50, 100] }));
-light02.addComponent(new Light());
-scene.addChild(light02);
-
+let temp;
+for (const node of loader.gltf.nodes) {
+    if (node.name.startsWith('Spot')) {
+        temp = new Node();
+        temp.addComponent(new Spot());
+        temp.addComponent(new Transform({ translation: node.translation }));
+        scene.addChild(temp);
+    } else if (node.name.startsWith('Sun')) {
+        temp = new Node();
+        temp.addComponent(new Sun());
+        temp.addComponent(new Transform({ translation: node.translation }));
+        scene.addChild(temp);
+    } else if (node.name.startsWith('Point')) {
+        temp = new Node();
+        temp.addComponent(new Point());
+        temp.addComponent(new Transform({ translation: node.translation }));
+        scene.addChild(temp);
+    }
+}
 
 function update(t, dt) {
     scene.traverse(node => {

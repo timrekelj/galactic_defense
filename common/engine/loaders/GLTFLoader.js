@@ -12,12 +12,12 @@ import {
     Vertex,
 } from '../core.js';
 
-// TODO: GLB support
-// TODO: accessors with no buffer views (zero-initialized)
-// TODO: image from buffer view
-// TODO: mipmaps
-// TODO: material texcoord sets
-// TODO: material alpha, doubleSided
+// GLB support
+// accessors with no buffer views (zero-initialized)
+// image from buffer view
+// mipmaps
+// material texcoord sets
+// material alpha, doubleSided
 
 export class GLTFLoader {
 

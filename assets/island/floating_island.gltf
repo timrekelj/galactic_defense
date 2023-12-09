@@ -1,6 +1,6 @@
 {
 	"asset":{
-		"generator":"Khronos glTF Blender I/O v3.6.27",
+		"generator":"Khronos glTF Blender I/O v4.0.44",
 		"version":"2.0"
 	},
 	"extensionsUsed":[
@@ -19,23 +19,9 @@
 						1,
 						1
 					],
-					"intensity":683,
-					"type":"directional",
-					"name":"Sun"
-				},
-				{
-					"color":[
-						1,
-						0.0049329763278365135,
-						0
-					],
 					"intensity":543.5141306588226,
-					"spot":{
-						"innerConeAngle":0.7836527824401855,
-						"outerConeAngle":0.7836527824401855
-					},
-					"type":"spot",
-					"name":"Spot.001"
+					"type":"point",
+					"name":"Point"
 				}
 			]
 		}
@@ -47,8 +33,7 @@
 			"nodes":[
 				0,
 				1,
-				2,
-				3
+				2
 			]
 		}
 	],
@@ -94,36 +79,17 @@
 					"light":0
 				}
 			},
-			"name":"Sun",
+			"name":"Point",
 			"rotation":[
-				-0.35404425859451294,
-				0.14093226194381714,
-				-0.14093226194381714,
-				0.9137444496154785
+				-0.7071068286895752,
+				0,
+				0,
+				0.7071068286895752
 			],
 			"translation":[
-				31.62813949584961,
-				19.197425842285156,
-				7.650121688842773
-			]
-		},
-		{
-			"extensions":{
-				"KHR_lights_punctual":{
-					"light":1
-				}
-			},
-			"name":"Spot",
-			"rotation":[
-				-0.7126894593238831,
-				0.022412147372961044,
-				-0.022412147372961044,
-				0.7007632851600647
-			],
-			"translation":[
-				13.273536682128906,
-				19.197425842285156,
-				-14.401226043701172
+				-1.1727256774902344,
+				19.123411178588867,
+				-0.2052464485168457
 			]
 		}
 	],
@@ -148,8 +114,7 @@
 			"name":"Material",
 			"pbrMetallicRoughness":{
 				"baseColorTexture":{
-					"index":0,
-					"texCoord":0
+					"index":0
 				},
 				"metallicFactor":0,
 				"roughnessFactor":0.9

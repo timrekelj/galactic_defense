@@ -1,6 +1,7 @@
 import { mat3, vec3, mat4 } from '../../../lib/gl-matrix-module.js';
 
-import { Light } from '../../../light.js'
+import { Light } from '../lights/Light.js'
+import { Point } from '../lights/Point.js'
 
 import * as WebGL from '../WebGL.js';
 
@@ -14,7 +15,7 @@ import {
     getModels,
 } from '../core/SceneUtils.js';
 
-export class LitRenderer extends BaseRenderer {
+export class Renderer extends BaseRenderer {
 
     constructor(canvas) {
         super(canvas);
@@ -23,16 +24,16 @@ export class LitRenderer extends BaseRenderer {
     async initialize() {
         const gl = this.gl;
 
-        const litVertexShader = await fetch(new URL('../shaders/lit.v.glsl', import.meta.url))
+        const baseVertexShader = await fetch(new URL('../shaders/base.v.glsl', import.meta.url))
             .then(response => response.text());
 
-        const litFragmentShader = await fetch(new URL('../shaders/lit.f.glsl', import.meta.url))
+        const baseFragmentShader = await fetch(new URL('../shaders/base.f.glsl', import.meta.url))
             .then(response => response.text());
 
         this.programs = WebGL.buildPrograms(gl, {
-            lit: {
-                vertex: litVertexShader,
-                fragment: litFragmentShader,
+            base: {
+                vertex: baseVertexShader,
+                fragment: baseFragmentShader,
             },
         });
 
@@ -47,7 +48,7 @@ export class LitRenderer extends BaseRenderer {
         gl.viewport(0, 0, gl.drawingBufferWidth, gl.drawingBufferHeight);
         gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
 
-        const { program, uniforms } = this.programs.lit;
+        const { program, uniforms } = this.programs.base;
         gl.useProgram(program);
 
         // Setup camera
@@ -57,11 +58,17 @@ export class LitRenderer extends BaseRenderer {
         gl.uniformMatrix4fv(uniforms.uViewMatrix, false, viewMatrix);
         gl.uniformMatrix4fv(uniforms.uProjectionMatrix, false, projectionMatrix);
 
-        // Set up light
-        const light = scene.find(node => node.getComponentOfType(Light));
-        const lightMatrix = getGlobalModelMatrix(light);
-        const lightPosition  = mat4.getTranslation(vec3.create(), lightMatrix);
-        gl.uniform3fv(uniforms.uLightPosition, lightPosition);
+        // Set up lights
+        // TODO: setup multiple lights
+        // TODO: setup spot light, sun light and point light
+        const lights = scene.filter(node => node.getComponentOfType(Light));
+        for (const light of lights) {
+            if (light.components[0] instanceof Point) {
+                const lightMatrix = getGlobalModelMatrix(light);
+                const lightPosition = mat4.getTranslation(vec3.create(), lightMatrix);
+                gl.uniform3fv(uniforms.uLightPosition, lightPosition);
+            }
+        }
 
         this.renderNode(scene);
     }
@@ -69,7 +76,7 @@ export class LitRenderer extends BaseRenderer {
     renderNode(node, modelMatrix = mat4.create()) {
         const gl = this.gl;
 
-        const { program, uniforms } = this.programs.lit;
+        const { program, uniforms } = this.programs.base;
 
         const localMatrix = getLocalModelMatrix(node);
         modelMatrix = mat4.mul(mat4.create(), modelMatrix, localMatrix);
@@ -93,7 +100,7 @@ export class LitRenderer extends BaseRenderer {
     renderPrimitive(primitive) {
         const gl = this.gl;
 
-        const { program, uniforms } = this.programs.lit;
+        const { program, uniforms } = this.programs.base;
 
         const vao = this.prepareMesh(primitive.mesh);
         gl.bindVertexArray(vao);
