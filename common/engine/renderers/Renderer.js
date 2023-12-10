@@ -37,7 +37,8 @@ export class Renderer extends BaseRenderer {
             },
         });
 
-        gl.clearColor(1, 1, 1, 1);
+
+        gl.clearColor(0, 0, 0, 1);
         gl.enable(gl.DEPTH_TEST);
         gl.enable(gl.CULL_FACE);
     }
@@ -62,12 +63,16 @@ export class Renderer extends BaseRenderer {
         // TODO: setup multiple lights
         // TODO: setup spot light, sun light and point light
         const lights = scene.filter(node => node.getComponentOfType(Light));
+        const lightPositions = [];
         for (const light of lights) {
             if (light.components[0] instanceof Point) {
                 const lightMatrix = getGlobalModelMatrix(light);
-                const lightPosition = mat4.getTranslation(vec3.create(), lightMatrix);
-                gl.uniform3fv(uniforms.uLightPosition, lightPosition);
+                lightPositions.push(mat4.getTranslation(vec3.create(), lightMatrix));
             }
+        }
+
+        for (let i = 0; i < lightPositions.length; i++) {
+            gl.uniform3fv(uniforms.uLightPositions[i], lightPositions[i]);
         }
 
         this.renderNode(scene);

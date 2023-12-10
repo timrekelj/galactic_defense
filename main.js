@@ -1,5 +1,4 @@
-//?: START LIVE SERVER: python -m http.server 3000
-// TODO: skybox
+// NOTE: START LIVE SERVER: python -m http.server 3000
 
 import { GLTFLoader } from './common/engine/loaders/GLTFLoader.js'
 import { Renderer } from './common/engine/renderers/Renderer.js'
