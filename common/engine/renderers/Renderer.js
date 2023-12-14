@@ -60,8 +60,8 @@ export class Renderer extends BaseRenderer {
         gl.uniformMatrix4fv(uniforms.uProjectionMatrix, false, projectionMatrix);
 
         // Set up lights
-        // TODO: setup multiple lights
-        // TODO: setup spot light, sun light and point light
+        // TODO: setup struct for light
+        // NOTE: add this to render node
         const lights = scene.filter(node => node.getComponentOfType(Light));
         const lightPositions = [];
         for (const light of lights) {
