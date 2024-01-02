@@ -66,4 +66,14 @@ export class Node {
         return this.components.filter(component => component instanceof type);
     }
 
+    // HACK: new
+    clone() {
+        console.log("clone: ", this);
+        return new Node({
+            children: this.children,
+            parent: this.parent,
+            components: this.components
+        })
+    }
+
 }
