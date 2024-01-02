@@ -21,7 +21,7 @@ const renderer = new Renderer(canvas);
 await renderer.initialize();
 
 let loader = new GLTFLoader();
-await loader.load('./assets/testing/testing.gltf');
+await loader.load('./assets/island/world.gltf');
 
 const scene = loader.loadScene(loader.defaultScene);
 if (!scene) { throw new Error('A default scene is required'); }
@@ -29,13 +29,13 @@ if (!scene) { throw new Error('A default scene is required'); }
 const camera = scene.find(node => node.getComponentOfType(Camera));
 if (!camera) { throw new Error('A camera is required'); }
 
-const model = await loader.loadNode('Ship');
-model.getComponentOfType(Transform).translation = [0, 3, 0];
+const model = await loader.loadNode('Ship01');
 
-// TODO: copy model
-console.log("model: ", model);
 const model2 = model.clone();
-console.log("model2: ", model2);
+model2.addComponent(new Transform());
+model2.getComponentOfType(Transform).translation = [0, 10, 0];
+
+scene.addChild(model2);
 
 camera.addComponent(new TurntableController(camera, document.body, {
     distance: 100,

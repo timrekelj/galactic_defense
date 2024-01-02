@@ -68,12 +68,10 @@ export class Node {
 
     // HACK: new
     clone() {
-        console.log("clone: ", this);
-        return new Node({
-            children: this.children,
-            parent: this.parent,
-            components: this.components
-        })
+        const temp = new Node();
+        temp.children = this.children.map(child => child.clone());
+        temp.parent = this.parent;
+        this.components.map(component => temp.addComponent(Object.assign(Object.create(Object.getPrototypeOf(component)), component)));
+        return temp;
     }
-
 }
