@@ -4,7 +4,7 @@ precision mediump sampler2D;
 
 uniform sampler2D uBaseTexture;
 uniform vec4 uBaseFactor;
-uniform vec3 uLightPositions[16];
+uniform vec3 uLightPosition;
 
 in vec2 vTexCoord;
 in vec3 vNormal;
@@ -12,20 +12,13 @@ in vec3 vPosition;
 
 out vec4 oColor;
 
-vec3 CalcLight(vec3 lightPos) {
-    vec3 L = normalize(lightPos - vPosition);
+void main() {
+    vec3 L = normalize(uLightPosition - vPosition);
     vec3 N = normalize(vNormal);
     float lambert = max(dot(N, L), 0.0);
-    return vec3(lambert);
-}
+    float ambient = 0.3;
 
-void main() {
-    float ambient = 0.4;
     vec4 baseColor = texture(uBaseTexture, vTexCoord);
-    vec3 color;
-    for (int i = 0; i < 16; i++) {
-        color += CalcLight(uLightPositions[i]);
-    }
-    oColor += uBaseFactor * baseColor * vec4(color + ambient, 1);
+    oColor = uBaseFactor * baseColor * vec4(vec3(lambert) + ambient, 1);
 }
 
