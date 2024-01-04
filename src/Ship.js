@@ -1,5 +1,5 @@
 import { Transform } from '../engine/core.js';
-import { vec3 } from '../lib/gl-matrix-module.js';
+import { quat, vec3 } from '../lib/gl-matrix-module.js';
 
 export class Ship {
     constructor(path, parent) {
@@ -32,6 +32,9 @@ export class Ship {
             return;
         }
         const direction = vec3.subtract(vec3.create(), this.path[this.targetPathIndex], this.parent.getComponentOfType(Transform).translation);
+
+        // rotate towards direction
+        const rotation = quat.rotationTo(quat.create(), [0, 0, 1], direction);
 
         vec3.normalize(direction, direction);
         vec3.scale(direction, direction, this.speed * dt);
