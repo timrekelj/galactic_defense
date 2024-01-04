@@ -66,12 +66,19 @@ export class Node {
         return this.components.filter(component => component instanceof type);
     }
 
-    // HACK: new
+    // HACK: added function
     clone() {
         const temp = new Node();
         temp.children = this.children.map(child => child.clone());
         temp.parent = this.parent;
         this.components.map(component => temp.addComponent(Object.assign(Object.create(Object.getPrototypeOf(component)), component)));
         return temp;
+    }
+
+    // HACK: added function
+    destroy() {
+        this.parent?.removeChild(this);
+        this.children.forEach(child => child.destroy());
+        this.components.forEach(component => component.destroy?.());
     }
 }
