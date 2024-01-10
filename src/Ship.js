@@ -2,13 +2,16 @@ import { Transform } from '../engine/core.js';
 import { quat, vec3 } from '../lib/gl-matrix-module.js';
 
 export class Ship {
-    constructor(path, parent) {
+    constructor(path, parent, game) {
         this.health = 100;
         this.rotation_speed = 10;
         this.speed = 10;
         this.path = path;
         this.targetPathIndex = 1;
         this.parent = parent;
+        this.game = game;
+        this.alive = true;
+
         this.parent.getComponentOfType(Transform).translation = [...this.path[0]];
     }
 
@@ -17,9 +20,14 @@ export class Ship {
     }
 
     takeDamage(damage) {
+        if (!this.alive) { return; }
+
         this.health -= damage;
         if (this.health <= 0) {
-            this.isAlive = false;
+            this.alive = false;
+            this.parent.destroy();
+            this.game.score += 10;
+            this.game.money += 50;
         }
     }
 

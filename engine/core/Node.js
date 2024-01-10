@@ -66,7 +66,7 @@ export class Node {
         return this.components.filter(component => component instanceof type);
     }
 
-    // HACK: added function
+    // INFO: new function
     clone() {
         const temp = new Node();
         temp.children = this.children.map(child => child.clone());
@@ -75,8 +75,9 @@ export class Node {
         return temp;
     }
 
-    // HACK: added function
+    // INFO: new function
     destroy() {
+        // TODO: fix this because it still exists in the scene
         this.parent?.removeChild(this);
         this.children.forEach(child => child.destroy());
         this.components.forEach(component => component.destroy?.());

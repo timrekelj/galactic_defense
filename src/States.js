@@ -68,7 +68,6 @@ export class GameState {
     start(){
         this.game.init();
         this.updateSystem.start();
-
     }
 
     // Stop the update and render loop
