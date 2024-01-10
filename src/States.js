@@ -95,4 +95,114 @@ export class GameState {
     }
 }
 
-// If you wish you can implement new game states like in game menus
+
+export class SimpleWelcomeMenuState {
+    constructor(document, stackReference) {
+        this.stackReference = stackReference;
+
+        this.overlay = document.querySelector(".overlay");
+        this.container = document.querySelector(".container");
+
+        // Menus
+        this.menu = document.querySelector(".menu");
+        this.howToPlayMenu = document.querySelector("#howToPlay");
+        this.creditsMenu = document.querySelector("#credits");
+
+        // Buttons
+        this.playBtn = document.querySelector('#playBtn');
+        this.howToBtn = document.querySelector('#howToBtn');
+        this.creditsBtn = document.querySelector("#creditsBtn");
+        this.creditsBtn = document.querySelector("#creditsBtn");
+        this.backBtns = document.querySelectorAll(".backBtn");
+
+        // event listeners
+        this.container.addEventListener("pointerdown", (event) =>{
+            // prevent game to "steal" mouse event
+            //https://stackoverflow.com/questions/13966734/child-element-click-event-trigger-the-parent-click-event
+            event.stopPropagation();
+        });
+
+        this.playBtn.addEventListener('pointerdown', (event) => {
+            this.stackReference.popState();
+            this.stackReference.pushState(this.stackReference.gs);
+        });
+
+        this.howToBtn.addEventListener('pointerdown', (event) => {
+            console.log("howTo");
+            this.changeMenueVisibility(this.howToPlayMenu, this.menu);
+        });
+
+        this.creditsBtn.addEventListener('pointerdown', (event) => {
+            console.log("credits");
+            this.changeMenueVisibility(this.creditsMenu, this.menu);
+        });
+
+        this.backBtns.forEach(backBtn => {
+            backBtn.addEventListener('pointerdown', (event) => {
+            console.log("Go back");
+            //TODO optimise change menu so you can only pass one menu to make it visible, other will be invisible
+            this.changeMenueVisibility(this.menu, this.creditsMenu);
+            this.changeMenueVisibility(null, this.howToPlayMenu);
+            });
+        });
+
+        this.escKeyListener =(event) => {
+            console.log("key pressed");
+            if(event.key === "Escape"){
+                this.stackReference.popState();
+                this.stackReference.pushState(this.stackReference.welcomeMenu);
+            }
+        }
+    }
+
+    start(){
+        console.log("Simple menu started");
+
+        document.body.removeEventListener("keydown", this.escKeyListener);
+        console.log("key listener removed");
+
+        this.changeMenueVisibility(this.overlay, null)
+        this.changeMenueVisibility(this.menu, null)
+    }
+
+    // when spamming esc and clicking play, ships move weird
+    stop(){
+        console.log("simple menu stopped");
+        this.changeMenueVisibility(null, this.overlay);
+
+        //probably hacky solution
+        document.body.addEventListener("keydown", this.escKeyListener);
+
+        // document.querySelector(".container").removeEventListener("pointerdown", (event) =>{
+        //     // prevent game to "steal" mouse event
+        //     //https://stackoverflow.com/questions/13966734/child-element-click-event-trigger-the-parent-click-event
+        //     event.stopPropagation();
+        // });
+    }
+
+    //TODO this can be optimised with loop to go over all menus and only set one to visible (this can be more dynamic then)
+    changeMenueVisibility(menuToShow, menuToHide){
+        menuToShow?.classList.remove("invisible");
+        menuToShow?.classList.add("visible");
+
+        menuToHide?.classList.remove("visible");
+        menuToHide?.classList.add("invisible");
+    }
+}
+
+export class SimplePauseMenuState {
+    constructor(document, stackReference) {
+        this.stackReference = stackReference;
+
+
+    }
+
+    start(){
+
+    }
+
+    stop(){
+
+    }
+}
+// If you wish you can implement new (game) states, like in game menus
