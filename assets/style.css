@@ -64,7 +64,7 @@ body, html {
   100% { transform: rotate(1800deg); }
 }
 
-.menu, .howToPlay, .credits{
+.menu, .howToPlay, .credits, .exitConfirmation{
     /* display: flex; */
     flex-direction: column;
     align-items: center;
@@ -74,13 +74,19 @@ body, html {
 }
 
 
-.menu > h1, .credits > h1, .howToPlay > h1{
+.menu > h1, .credits > h1, .howToPlay > h1, .exitConfirmation > h1{
     color: var(--blue-color);
     font-size: 3em;
     font-weight: 600;
 }
 
-.menu > button, .credits > button, .howToPlay > button{
+.howToPlay > div, .credits > div, .exitConfirmation > div{
+    color: var(--blue-color);
+    font-size: 1.3em;
+    margin: 0px 10px 20px 0px;
+}
+
+.menu > button, .credits > button, .howToPlay > button, .exitConfirmation > button{
     margin: 10px;
     width: 25%;
     height: 15%;
@@ -118,11 +124,29 @@ body, html {
 
 
 /*  INFO: added UI */
-.ui {
+.game-ui {
+    flex-direction: column;
     user-select: none;
     margin: 10px;
     padding: 10px;
     font-size: 30px;
-    color: #000;
-    background-color: #AAA;
+    /* color: #000; */
+    /* background-color: #AAA; */
+    color: white;
+    background-color: #000;
+
+    z-index: 100;
+
+    position: fixed;
+    left: 10px;
+    top: 10px;
+
+    /* position: absolute; */
+    /* top: 10; */
+    /* left: 10; */
+}
+
+.game-ui > *{
+    color: white;
+    z-index: 100;
 }

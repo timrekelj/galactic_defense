@@ -3,7 +3,7 @@
 import { GLTFLoader } from './engine/loaders/GLTFLoader.js'
 import { Renderer } from './engine/renderers/Renderer.js'
 
-import { StateManager } from './src/StackManager.js'
+import { StateManager } from './src/StateManager.js'
 
 //this needs to be first otherwise renderer.initialise prevents this to be triggered
 document.addEventListener("DOMContentLoaded", (event) => {
