@@ -27,6 +27,9 @@ export class Turret {
     }
 
     findTarget() {
+        if (this.target !== null && !this.target.getComponentOfType(Ship).alive) {
+            this.target = null;
+        }
         this.scene.traverse(node => {
             if (
                 node.getComponentOfType(Ship) !== undefined &&
@@ -35,19 +38,21 @@ export class Turret {
                 if (this.target === null) {
                     console.log('found target');
                     this.target = node;
-                } else if (vec3.distance(this.target.getComponentOfType(Transform).translation, this.turret_place) > vec3.distance(node.getComponentOfType(Transform).translation, this.turret_place)) {
-                    this.target = node;
-                    console.log('found target');
                 }
             }
         });
     }
 
     rotate(dt) {
-        // TODO: implement rotation
         if (this.target === null) { return; }
 
-
+        // roatate towards target
+        const target_position = this.target.getComponentOfType(Transform).translation;
+        const turret_position = this.parent.getComponentOfType(Transform).translation;
+        const direction = vec3.subtract(vec3.create(), target_position, turret_position);
+        const rotation = quat.rotateY(quat.create(), quat.create(), Math.atan2(direction[0], direction[2]) + Math.PI);
+        quat.slerp(this.parent.getComponentOfType(Transform).rotation, this.parent.getComponentOfType(Transform).rotation, rotation, this.rotation_speed * dt);
+        this.parent.getComponentOfType(Transform).rotation = rotation;
     }
 
     shoot(dt) {
@@ -60,6 +65,8 @@ export class Turret {
             this.time_since_last_shot = 0;
             this.target.getComponentOfType(Ship).takeDamage(this.damage);
             // TODO: spawn bullet or do something to visualize the shot
+            // maybe just 3D line from turret to target
+            // TODO: add sound?
         }
     }
 }

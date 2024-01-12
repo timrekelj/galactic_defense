@@ -6,14 +6,16 @@ import { Ship } from './Ship.js'
 import { Turret } from './Turret.js'
 
 export class Game {
-    constructor(loader, scene) {
+    constructor(loader, scene, canvas) {
         this.lives = 10;
         this.score = 0;
         this.money = 100;
         this.loader = loader;
         this.scene = scene;
+        this.canvas = canvas;
         this.time_since_last_spawn = 0;
         this.spawn_rate = 300;
+        this.ship_counter = 0;
     }
     
     async init() {
@@ -43,6 +45,11 @@ export class Game {
         temp_turret.addComponent(new Turret(this.scene, temp_turret, this.level_data.tower_places[20]));
         this.scene.addChild(temp_turret);
 
+        const temp_turre = this.loader.loadNode('Tower').clone();
+        temp_turre.getComponentOfType(Transform).translation = this.level_data.tower_places[1];
+        temp_turre.addComponent(new Turret(this.scene, temp_turre, this.level_data.tower_places[6]));
+        this.scene.addChild(temp_turre);
+
         this.spawnShip();
     }
 
@@ -57,14 +64,24 @@ export class Game {
         this.time_since_last_spawn += 100 * dt;
         if (this.time_since_last_spawn > this.spawn_rate) {
             this.time_since_last_spawn = 0;
-            // this.spawn_rate *= 0.95;
-            // this.spawnShip(t);
+            this.spawn_rate *= 0.99;
+            this.spawnShip();
         }
     }
 
-    spawnShip(t) {
-        const ship = this.loader.loadNode('Ship01').clone();
-        ship.addComponent(new Ship(this.level_data.path, ship, this));
-        this.scene.addChild(ship);
+    spawnShip() {
+        if (this.ship_counter < 10) {
+            const ship = this.loader.loadNode('Ship01').clone();
+            ship.addComponent(new Ship(100, 10, 50, 10, this.level_data.path, ship, this));
+            this.scene.addChild(ship);
+            this.ship_counter++;
+        } else if (this.ship_counter < 15) {
+            const ship = this.loader.loadNode('Ship02').clone();
+            ship.addComponent(new Ship(200, 7, 100, 50, this.level_data.path, ship, this));
+            this.scene.addChild(ship);
+            this.ship_counter++;
+        } else {
+            this.ship_counter = 0;
+        }
     }
 }

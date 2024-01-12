@@ -1,13 +1,11 @@
 import { Transform } from '../engine/core.js';
 import { quat, vec3 } from '../lib/gl-matrix-module.js';
 
-export class Ship {
-    constructor(health, speed, money_reward, score_reward, path, parent, game) {
-        this.health = health;
-        this.money_reward = money_reward;
-        this.score_reward = score_reward;
+export class LightShip {
+    constructor(path, parent, game) {
+        this.health = 100;
         this.rotation_speed = 10;
-        this.speed = speed;
+        this.speed = 10;
         this.path = path;
         this.targetPathIndex = 1;
         this.parent = parent;
@@ -28,9 +26,8 @@ export class Ship {
         if (this.health <= 0) {
             this.alive = false;
             this.parent.destroy();
-            this.game.score += this.score_reward
-            this.game.money += this.money_reward;
-            // TODO: add sound on death? (this is easy with javascript class Audio - just create new Audio('path/to/file.mp3') and call .play() on it)
+            this.game.score += 10;
+            this.game.money += 50;
         }
     }
 

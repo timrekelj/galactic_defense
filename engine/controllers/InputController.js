@@ -2,9 +2,12 @@ import { quat, vec3 } from '../../../lib/gl-matrix-module.js';
 
 import { Transform } from '../core/Transform.js';
 
-export class TurntableController {
+import { Raycast } from '../core/Raycast.js';
 
-    constructor(node, domElement, {
+
+export class InputController {
+
+    constructor(renderer, node, domElement, {
         pitch = 0,
         yaw = 0,
         distance = 1,
@@ -12,6 +15,7 @@ export class TurntableController {
         zoomSensitivity = 0.002,
     } = {}) {
         this.node = node;
+        this.renderer = renderer; // INFO: added renderer
         this.domElement = domElement;
 
         this.pitch = pitch;
@@ -40,6 +44,8 @@ export class TurntableController {
         this.domElement.removeEventListener('pointerdown', this.pointerdownHandler);
         this.domElement.addEventListener('pointerup', this.pointerupHandler);
         this.domElement.addEventListener('pointermove', this.pointermoveHandler);
+
+        this.clickHandler(e);
     }
 
     pointerupHandler(e) {
@@ -66,6 +72,15 @@ export class TurntableController {
 
     wheelHandler(e) {
         this.distance *= Math.exp(this.zoomSensitivity * e.deltaY);
+    }
+
+    // console.log mouse location on mouse click
+    clickHandler(e) {
+        // TODO: handle click on tower places
+        const raycast = new Raycast();
+        raycast.sendRayFromCamera(e, this.node);
+        this.renderer.drawLine([0, 0, 0], raycast.ray, [1, 0, 0]);
+        console.log(raycast.ray);
     }
 
     update() {

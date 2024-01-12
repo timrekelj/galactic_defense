@@ -48,6 +48,8 @@ export class Renderer extends BaseRenderer {
         gl.viewport(0, 0, gl.drawingBufferWidth, gl.drawingBufferHeight);
         gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
 
+        gl.drawArrays(gl.LINES, 0, 10);
+
         const { program, uniforms } = this.programs.base;
         gl.useProgram(program);
 
@@ -116,4 +118,7 @@ export class Renderer extends BaseRenderer {
         gl.bindVertexArray(null);
     }
 
+    // INFO: debugging purposes
+    drawLine(start, end, color = [1, 1, 1]) {
+    }
 }

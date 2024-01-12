@@ -1,6 +1,6 @@
 import { ResizeSystem } from './../engine/systems/ResizeSystem.js'
 import { UpdateSystem } from './../engine/systems/UpdateSystem.js'
-import { TurntableController } from './../engine/controllers/TurntableController.js'
+import { InputController } from './../engine/controllers/InputController.js'
 import { Game } from './Game.js'
 
 import { Light } from './../engine/lights/Light.js'
@@ -40,7 +40,7 @@ export class GameState {
         if (!this.camera) { throw new Error('A camera is required'); }
 
         // TODO: fix turntable controller (limit rotation and zoom, maybe fix some bugs)
-        this.camera.addComponent(new TurntableController(this.camera, document.body, {
+        this.camera.addComponent(new InputController(this.renderer, this.camera, document.body, {
             distance: 300,
             yaw: Math.PI / 2,
             pitch: -(Math.PI / 2),
@@ -58,7 +58,7 @@ export class GameState {
             }
         }
 
-        this.game = new Game(this.loader, this.scene);
+        this.game = new Game(this.loader, this.scene, this.canvas);
 
         this.updateSystem = new UpdateSystem({ update: this.update, render: this.render });
         new ResizeSystem({ canvas: this.canvas, resize: this.resize }).start();
