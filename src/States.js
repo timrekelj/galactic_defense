@@ -58,19 +58,35 @@ export class GameState {
             }
         }
 
-        this.game = new Game(this.loader, this.scene);
+        this.game = null;
+        // this.game = new Game(this.loader, this.scene);
 
-        this.updateSystem = new UpdateSystem({ update: this.update, render: this.render });
-        new ResizeSystem({ canvas: this.canvas, resize: this.resize }).start();
+        this.updateSystem = null;
+        // this.updateSystem = new UpdateSystem({ update: this.update, render: this.render });
+        this.resizeSystem = new ResizeSystem({ canvas: this.canvas, resize: this.resize }).start();
     }
 
     // init game
     init(){
-        this.game.init();
+        // console.log("INIT?");
+        // this.game.init();
+        // console.log(this.updateSystem);
+        // if(this.updateSystem !== null){
+        //     console.log("EXISTS!!!");
+        //     this.updateSystem.stop();
+        //     delete this.updateSystem();
+        // }
+        // this.updateSystem = new UpdateSystem({ update: this.update, render: this.render });
     }
 
     //start the update and render continuously
     start(){
+        if(this.game === null){
+            this.game = new Game(this.loader, this.scene);
+            this.updateSystem = new UpdateSystem({ update: this.update, render: this.render });
+            this.game.init();
+        }
+
         this.updateSystem.start();
         this.changeMenueVisibility(document.querySelector(".game-ui"), null)
     }
@@ -252,7 +268,6 @@ export class SimplePauseMenuState {
             }
 
             this.stackReference.pushState(this.stackReference.gs);
-            console.log(this.stackReference.getCurrentState());
         });
 
         this.confirmExitBtn.addEventListener('pointerdown', (event) => {

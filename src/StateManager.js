@@ -34,7 +34,7 @@ export class StateManager {
             console.log("should make new game");
 
             this.gs = new GameState(this.canvas, this.renderer, this.loader); //TODO also stop resizing?
-            this.gs.init();
+            // this.gs.init();
 
 //            console.log(this.gs.game.scene);
 
@@ -47,14 +47,16 @@ export class StateManager {
 
     //we need this so when player exits the game, it destroy game state instance and it's data. 
     // So now when player starts new game it gets new game
-    destroyGameStateInstance(){
+    async destroyGameStateInstance(){
         if(this.gs){
             // need to remove loader scene cache
-            // console.log(this.loader.cache);
-            // this.loader.cache = new Map();    //<----- this  chrashes the app the second time you try to play
-            this.gs = null                      //<----- this will destroy curent game instance (if you don't count gltf cache)
-            console.log("Game destojed");
-            console.log(this.gs);
+            this.loader.cache.clear();
+
+            //hack, when you just cleare cache it doesn't work
+            await this.loader.load('./assets/models/world.gltf');
+
+            //this will destroy curent game instance (if you don't count gltf cache)
+            this.gs = null
         }
     }
 
@@ -73,11 +75,22 @@ export class StateManager {
 
     // pause the element on the top of the stack and remove it from stack
     popState() {
-        if(this.stateStack.length > 0){
-            this.getCurrentState()?.stop();
-            return this.stateStack.pop();
-        } else {
-            throw new Error("Trying to pop states from empty stack");
+        try {
+            if(this.stateStack.length > 0){
+                this.getCurrentState()?.stop();
+                let removedState = this.stateStack.pop();
+    
+                //start whatever is left in stack
+                if(this.stateStack.length > 0){
+                    this.getCurrentState()?.start();
+                }
+    
+                return removedState;
+            } else {
+                throw new Error("Trying to pop states from empty stack");
+            }   
+        } catch (error) {
+            throw new Error("There was an error when trying to pop from state stack: " + error)
         }
     }
 
