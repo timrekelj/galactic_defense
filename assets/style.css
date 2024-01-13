@@ -83,6 +83,7 @@ body, html {
 .howToPlay > div, .credits > div, .exitConfirmation > div{
     color: var(--blue-color);
     font-size: 1.3em;
+    text-align: justify;
     margin: 0px 10px 20px 0px;
 }
 
