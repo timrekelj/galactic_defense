@@ -64,6 +64,13 @@ export class Turret {
             // TODO: spawn bullet or do something to visualize the shot
             // maybe just 3D line from turret to target
             // TODO: add sound?
+            try {
+                const explosion = new Audio("./assets/sounds/blaster-edit.wav");
+                explosion.volume = 0.1;
+                explosion.play();
+            } catch (error) {
+                throw new Error("Problems with sound: " + error)
+            }
         }
     }
 }
