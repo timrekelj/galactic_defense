@@ -54,7 +54,8 @@
 				21,
 				22,
 				23,
-				25
+				25,
+				26
 			]
 		}
 	],
@@ -422,6 +423,21 @@
 				0,
 				10
 			]
+		},
+		{
+			"mesh":24,
+			"name":"Laser",
+			"rotation":[
+				0.7071068286895752,
+				0,
+				0,
+				0.7071068286895752
+			],
+			"translation":[
+				60,
+				5,
+				7
+			]
 		}
 	],
 	"cameras":[
@@ -696,6 +712,17 @@
 			"pbrMetallicRoughness":{
 				"baseColorTexture":{
 					"index":23
+				},
+				"metallicFactor":0,
+				"roughnessFactor":0.5
+			}
+		},
+		{
+			"doubleSided":true,
+			"name":"Material.001",
+			"pbrMetallicRoughness":{
+				"baseColorTexture":{
+					"index":24
 				},
 				"metallicFactor":0,
 				"roughnessFactor":0.5
@@ -1040,6 +1067,20 @@
 					"material":23
 				}
 			]
+		},
+		{
+			"name":"Cylinder.002",
+			"primitives":[
+				{
+					"attributes":{
+						"POSITION":80,
+						"NORMAL":81,
+						"TEXCOORD_0":82
+					},
+					"indices":83,
+					"material":24
+				}
+			]
 		}
 	],
 	"textures":[
@@ -1138,6 +1179,10 @@
 		{
 			"sampler":0,
 			"source":8
+		},
+		{
+			"sampler":0,
+			"source":9
 		}
 	],
 	"images":[
@@ -1185,6 +1230,11 @@
 			"mimeType":"image/png",
 			"name":"tower_texture",
 			"uri":"tower_texture.png"
+		},
+		{
+			"mimeType":"image/png",
+			"name":"laser_texture",
+			"uri":"laser_texture.png"
 		}
 	],
 	"accessors":[
@@ -1909,6 +1959,40 @@
 			"componentType":5123,
 			"count":756,
 			"type":"SCALAR"
+		},
+		{
+			"bufferView":80,
+			"componentType":5126,
+			"count":192,
+			"max":[
+				0.186321422457695,
+				-4.76837158203125e-07,
+				0.18632149696350098
+			],
+			"min":[
+				-0.186321422457695,
+				-2.000000476837158,
+				-0.1863214522600174
+			],
+			"type":"VEC3"
+		},
+		{
+			"bufferView":81,
+			"componentType":5126,
+			"count":192,
+			"type":"VEC3"
+		},
+		{
+			"bufferView":82,
+			"componentType":5126,
+			"count":192,
+			"type":"VEC2"
+		},
+		{
+			"bufferView":83,
+			"componentType":5123,
+			"count":372,
+			"type":"SCALAR"
 		}
 	],
 	"bufferViews":[
@@ -2391,6 +2475,30 @@
 			"byteLength":1512,
 			"byteOffset":69548,
 			"target":34963
+		},
+		{
+			"buffer":0,
+			"byteLength":2304,
+			"byteOffset":71060,
+			"target":34962
+		},
+		{
+			"buffer":0,
+			"byteLength":2304,
+			"byteOffset":73364,
+			"target":34962
+		},
+		{
+			"buffer":0,
+			"byteLength":1536,
+			"byteOffset":75668,
+			"target":34962
+		},
+		{
+			"buffer":0,
+			"byteLength":744,
+			"byteOffset":77204,
+			"target":34963
 		}
 	],
 	"samplers":[
@@ -2401,7 +2509,7 @@
 	],
 	"buffers":[
 		{
-			"byteLength":71060,
+			"byteLength":77948,
 			"uri":"world.bin"
 		}
 	]

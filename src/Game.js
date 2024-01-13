@@ -86,15 +86,15 @@ export class Game {
         // this.chooseTowerPlace(this.click_ray);
         const turret = this.loader.loadNode('Tower').clone();
         turret.getComponentOfType(Transform).translation = this.level_data.tower_places[1];
-        turret.addComponent(new Turret(this.scene, turret, this.level_data.tower_places[this.chooseTowerPlace(this.click_ray)]));
+        turret.addComponent(new Turret(this.scene, turret, this.level_data.tower_places[this.chooseTowerPlace()]));
         this.scene.addChild(turret);
     }
 
-    chooseTowerPlace(raycast) {
+    chooseTowerPlace() {
         // TODO: collision detection for tower places with raycast
-        const tower_place = this.level_data.tower_places[0];
-        console.log(raycast);
-        return 3;
+        console.log(this.click_ray);
+
+        return 1;
     }
 
     spawnShip() {

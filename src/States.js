@@ -34,6 +34,7 @@ export class GameState {
         this.loader.loadNode('Ship01').getComponentOfType(Transform).translation = [0, 1000, 0];
         this.loader.loadNode('Ship02').getComponentOfType(Transform).translation = [0, 1000, 0];
         this.loader.loadNode('Tower').getComponentOfType(Transform).translation = [0, 1000, 0];
+        this.loader.loadNode('Laser').getComponentOfType(Transform).translation = [0, 1000, 0];
 
         // Light setup
         // TODO: if there is time, add support for multiple lights (first for Point light, then for Spot and Sun light)
@@ -60,6 +61,9 @@ export class GameState {
             throw new Error("Problems at loading game song: " + e)
         }
 
+        // Camera and turntable setup
+        this.camera = this.scene.find(node => node.getComponentOfType(Camera));
+        if (!this.camera) { throw new Error('A camera is required'); }
 
         this.updateSystem = null;
         // this.updateSystem = new UpdateSystem({ update: this.update, render: this.render });
@@ -77,17 +81,14 @@ export class GameState {
             this.game.init();
         }
 
-        // Camera and turntable setup
-        this.camera = this.scene.find(node => node.getComponentOfType(Camera));
-        if (!this.camera) { throw new Error('A camera is required'); }
-
+        // add controller to camera
         this.camera.addComponent(new InputController(this.renderer, this.game, this.camera, document.body, {
             distance: 300,
             yaw: Math.PI / 2,
             pitch: -(Math.PI / 2),
         }));
 
-        this.updateSystem.start();
+       this.updateSystem.start();
         this.changeMenueVisibility(document.querySelector(".game-ui"), null)
 
         if(this.song !== null){

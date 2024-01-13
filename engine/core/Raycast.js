@@ -18,14 +18,15 @@ export class Raycast {
             1 - (2 * event.clientY) / window.innerHeight,
             1.0
         );
+
         // homogeneous clip coordinates
         const ray_clip = vec4.fromValues(ray_nds[0], ray_nds[1], -1.0, 1.0);
 
         // eye (camera) coordinates
         const ray_eye = vec4.multiply(
             vec4.create(),
-            mat4.invert(mat4.create(), getProjectionMatrix(camera)),
-            ray_clip
+            ray_clip,
+            mat4.invert(mat4.create(), getProjectionMatrix(camera))
         );
 
         // unproject the x,y coordinates
