@@ -4,9 +4,9 @@ import {
     getProjectionMatrix
 } from '../core/SceneUtils.js';
 
-import { Transform } from '../core/Transform.js';
-
 export class Raycast {
+    // INFO: there is a possibility that this works but I'm not sure as I cannot test it
+
     constructor() {
         this.ray = vec3.create();
     }

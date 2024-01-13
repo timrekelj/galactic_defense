@@ -117,8 +117,4 @@ export class Renderer extends BaseRenderer {
 
         gl.bindVertexArray(null);
     }
-
-    // INFO: debugging purposes
-    drawLine(start, end, color = [1, 1, 1]) {
-    }
 }

@@ -35,10 +35,7 @@ export class Turret {
                 node.getComponentOfType(Ship) !== undefined &&
                 vec3.distance(node.getComponentOfType(Transform).translation, this.turret_place) < this.range
             ) {
-                if (this.target === null) {
-                    console.log('found target');
-                    this.target = node;
-                }
+                if (this.target === null) { this.target = node; }
             }
         });
     }

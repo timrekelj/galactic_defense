@@ -35,17 +35,6 @@ export class GameState {
         this.loader.loadNode('Ship02').getComponentOfType(Transform).translation = [0, 1000, 0];
         this.loader.loadNode('Tower').getComponentOfType(Transform).translation = [0, 1000, 0];
 
-        // Camera and turntable setup
-        this.camera = this.scene.find(node => node.getComponentOfType(Camera));
-        if (!this.camera) { throw new Error('A camera is required'); }
-
-        // TODO: fix turntable controller (limit rotation and zoom, maybe fix some bugs)
-        this.camera.addComponent(new InputController(this.renderer, this.camera, document.body, {
-            distance: 300,
-            yaw: Math.PI / 2,
-            pitch: -(Math.PI / 2),
-        }));
-
         // Light setup
         // TODO: if there is time, add support for multiple lights (first for Point light, then for Spot and Sun light)
         let temp;
@@ -59,6 +48,17 @@ export class GameState {
         }
 
         this.game = new Game(this.loader, this.scene, this.canvas);
+
+        // Camera and turntable setup
+        this.camera = this.scene.find(node => node.getComponentOfType(Camera));
+        if (!this.camera) { throw new Error('A camera is required'); }
+
+        this.camera.addComponent(new InputController(this.renderer, this.game, this.camera, document.body, {
+            distance: 300,
+            yaw: Math.PI / 2,
+            pitch: -(Math.PI / 2),
+        }));
+
 
         this.updateSystem = new UpdateSystem({ update: this.update, render: this.render });
         new ResizeSystem({ canvas: this.canvas, resize: this.resize }).start();
