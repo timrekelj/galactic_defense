@@ -50,30 +50,31 @@ export class GameState {
         this.game = null;
         // this.game = new Game(this.loader, this.scene);
 
+        this.song = null;
+
+        try{
+            this.song = new Audio("./assets/sounds/song.mp3");
+            this.song.volume = 0.1;
+            this.song.loop = true;
+        } catch (e) {
+            throw new Error("Problems at loading game song: " + e)
+        }
+
+
         this.updateSystem = null;
         // this.updateSystem = new UpdateSystem({ update: this.update, render: this.render });
-        this.resizeSystem = new ResizeSystem({ canvas: this.canvas, resize: this.resize }).start();
+
+        this.updateSystem = new UpdateSystem({ update: this.update, render: this.render });
+        new ResizeSystem({ canvas: this.canvas, resize: this.resize }).start();
     }
 
-    // init game
-    init(){
-        // console.log("INIT?");
-        // this.game.init();
-        // console.log(this.updateSystem);
-        // if(this.updateSystem !== null){
-        //     console.log("EXISTS!!!");
-        //     this.updateSystem.stop();
-        //     delete this.updateSystem();
-        // }
-        // this.updateSystem = new UpdateSystem({ update: this.update, render: this.render });
-    }
-
+    //init game if not yet
     //start the update and render continuously
     start(){
         if(this.game === null){
             this.game = new Game(this.loader, this.scene);
             this.updateSystem = new UpdateSystem({ update: this.update, render: this.render });
-            this.game.init(); 
+            this.game.init();
         }
 
         // Camera and turntable setup
@@ -88,12 +89,20 @@ export class GameState {
 
         this.updateSystem.start();
         this.changeMenueVisibility(document.querySelector(".game-ui"), null)
+
+        if(this.song !== null){
+            this.song.play();
+        }
     }
 
     // Stop the update and render loop
     stop(){
         this.updateSystem.stop();
-        this.changeMenueVisibility(null, document.querySelector(".game-ui"))
+        this.changeMenueVisibility(null, document.querySelector(".game-ui"));
+        
+        if(this.song !== null){
+            this.song.pause();
+        }
     }
 
     update(t, dt) {

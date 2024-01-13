@@ -31,6 +31,13 @@ export class Ship {
             this.game.score += this.score_reward
             this.game.money += this.money_reward;
             // TODO: add sound on death? (this is easy with javascript class Audio - just create new Audio('path/to/file.mp3') and call .play() on it)
+            try {
+                const explosion = new Audio("./assets/sounds/explosion-short.wav");
+                explosion.volume = 0.5;
+                explosion.play();
+            } catch (error) {
+                throw new Error("Problems with sound: " + error)
+            }
         }
     }
 
