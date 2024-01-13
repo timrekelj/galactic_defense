@@ -1,3 +1,11 @@
+:root{
+    --red-color: #091a39;
+    --pink-color: #15082f;
+    --purple-color: #4b2874;
+    --blue-color: #193266;
+    --grey-color: #090521;
+}
+
 body, html {
     margin: 0;
     padding: 0;
@@ -56,12 +64,89 @@ body, html {
   100% { transform: rotate(1800deg); }
 }
 
+.menu, .howToPlay, .credits, .exitConfirmation{
+    /* display: flex; */
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 100%;
+    background-color: color-mix(in srgb, var(--grey-color), transparent 10%);
+}
+
+
+.menu > h1, .credits > h1, .howToPlay > h1, .exitConfirmation > h1{
+    color: var(--blue-color);
+    font-size: 3em;
+    font-weight: 600;
+}
+
+.howToPlay > div, .credits > div, .exitConfirmation > div{
+    color: var(--blue-color);
+    font-size: 1.3em;
+    margin: 0px 10px 20px 0px;
+}
+
+.menu > button, .credits > button, .howToPlay > button, .exitConfirmation > button{
+    margin: 10px;
+    width: 25%;
+    height: 15%;
+
+    background-color: var(--purple-color);
+    border: none;
+    border-radius: 20px;
+    box-shadow: #11001c 2px 2px 15px;
+
+    color: var(--blue-color);
+    font-size: 2em;
+    font-weight: 600;
+}
+
+.credits, .howToPlay{
+    display: none;
+}
+
+.credits > div, .howToPlay > div {
+    width: 75%;
+}
+
+.welcome-menu{
+    /* width: 100%; */
+    /* height: 100%; */
+}
+
+.visible{
+    display: flex;
+}
+
+.invisible{
+    display: none;
+}
+
+
 /*  INFO: added UI */
-.ui {
+.game-ui {
+    flex-direction: column;
     user-select: none;
     margin: 10px;
     padding: 10px;
     font-size: 30px;
-    color: #000;
-    background-color: #AAA;
+    /* color: #000; */
+    /* background-color: #AAA; */
+    color: white;
+    background-color: #000;
+
+    z-index: 100;
+
+    position: fixed;
+    left: 10px;
+    top: 10px;
+
+    /* position: absolute; */
+    /* top: 10; */
+    /* left: 10; */
+}
+
+.game-ui > *{
+    color: white;
+    z-index: 100;
 }

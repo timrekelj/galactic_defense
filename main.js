@@ -3,8 +3,13 @@
 import { GLTFLoader } from './engine/loaders/GLTFLoader.js'
 import { Renderer } from './engine/renderers/Renderer.js'
 
-import { GameState } from './src/States.js'
 import { StateManager } from './src/StateManager.js'
+
+//this needs to be first otherwise renderer.initialise prevents this to be triggered
+document.addEventListener("DOMContentLoaded", (event) => {
+    console.log("page is fully loaded");
+    document.querySelector('.loader-container').remove();
+  });
 
 const canvas = document.querySelector('canvas');
 
@@ -14,11 +19,7 @@ await renderer.initialize();
 const loader = new GLTFLoader();
 await loader.load('./assets/models/world.gltf');
 
-//store state of curently active state (game or some menue (welcome/pause...))
-const stackManager = new StateManager();
+// //store state of curently active state (game or some menue (welcome/pause...))
+const stackManager = new StateManager(canvas, renderer, loader, document);
+stackManager.initialize();
 
-//initialise game and push it on top of the stack
-const gs = new GameState(canvas, renderer, loader); //TODO also stop resizing
-stackManager.pushState(gs);
-
-document.querySelector('.loader-container').remove();

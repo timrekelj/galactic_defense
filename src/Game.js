@@ -83,17 +83,17 @@ export class Game {
         }
         this.money -= this.turret_price;
 
-        this.chooseTowerPlace(this.click_ray);
-        // const turret = this.loader.loadNode('Tower').clone();
-        // turret.getComponentOfType(Transform).translation = this.level_data.tower_places[1];
-        // turret.addComponent(new Turret(this.scene, turret, this.level_data.tower_places[this.chooseTowerPlace(this.click_ray)]));
-        // this.scene.addChild(turret);
+        // this.chooseTowerPlace(this.click_ray);
+        const turret = this.loader.loadNode('Tower').clone();
+        turret.getComponentOfType(Transform).translation = this.level_data.tower_places[1];
+        turret.addComponent(new Turret(this.scene, turret, this.level_data.tower_places[this.chooseTowerPlace(this.click_ray)]));
+        this.scene.addChild(turret);
     }
 
     chooseTowerPlace(raycast) {
         // TODO: collision detection for tower places with raycast
         const tower_place = this.level_data.tower_places[0];
-        console.log(tower_place);
+        console.log(raycast);
         return 3;
     }
 

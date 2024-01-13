@@ -9,20 +9,74 @@
     <link rel="stylesheet" href="assets/style.css">
 </head>
 <body>
-    <div class="fullscreen no-touch">
+    <div class="fullscreen no-touch game-canvas invisible">
         <canvas class="pixelated"></canvas>
     </div>
-    <div class="overlay ui">
-        Score: <span class="score_number">0</span>
+
+    <div class="game-ui invisible">
+        <div>Score: <span class="score_number">0</span></div>
         <br>
-        Lives: <span class="lives_number">0</span>
+        <div>Lives: <span class="lives_number">0</span></div>
         <br>
-        Money: <span class="money_number">0</span>
+        <div>Money: <span class="money_number">0</span></div>
         <br>
-        Time: <span class="time_number">0</span>
+        <div>Time: <span class="time_number">0</span></div>
     </div>
-    <div class="fullscreen overlay loader-container">
-        <div class="loader"></div>
+
+    <div class="fullscreen overlay">
+        <div class="loader-container">
+            <div class="loader"></div>
+        </div>
+
+        <div class="container">
+            <span class="welcome-menu">
+                <div class="menu visible" id="welcome-menu">
+                    <h1>Galactic defense</h1>
+                    <button type="button" id="playBtn">Play</button>
+                    <button type="button" id="howToBtn">How to play.</button>
+                    <button type="button" id="creditsBtn">Credits</button>
+                </div>
+
+                <div class="howToPlay invisible" id="howToPlay">
+                    <h1>How to play</h1>
+                    <div>
+                        Lorem ipsum dolor sit amet consectetur adipisicing elit. Neque harum esse possimus perferendis earum corporis veniam nihil quia vel culpa maxime et magnam eligendi accusamus aspernatur dignissimos, adipisci ex cum!
+                    </div>
+                    <br>
+
+                    <button type="button" class="backBtn">Back</button>
+                </div>
+
+                <div class="credits invisible" id="credits">
+                    <h1>About us</h1>
+                    <div>
+                        Lorem ipsum dolor sit, amet consectetur adipisicing elit. Fugiat, aspernatur dicta beatae molestiae maxime reiciendis consequuntur vel! At, consectetur. Iure quibusdam dolor doloremque aperiam nemo eum nam beatae a suscipit!
+                    </div>
+                    <br>
+
+                    <button type="button" class="backBtn">Back</button>
+                </div>
+            </span>
+
+            <span class="pause-menu">
+                <div class="menu invisible" id="pause-menu">
+                    <h1>Galactic defense</h1>
+                    <button type="button" id="resumeBtn">Resume</button>
+                    <button type="button" id="exitBtn">Exit.</button>
+                </div>
+
+                <div class="exitConfirmation invisible">
+                    <h1>Are you sure?</h1>
+                    <div>
+                        If you exit, the game progress will be lost!
+                    </div>
+                    <br>
+
+                    <button type="button" class="backBtn">Cancel.</button>
+                    <button type="button" class="confirmExitBtn" id="confirmExitBtn">Exit to main manu.</button>
+                </div>
+            </span>
+        </div>
     </div>
 </body>
 </html>

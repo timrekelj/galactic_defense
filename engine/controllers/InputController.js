@@ -76,7 +76,6 @@ export class InputController {
     }
 
     clickHandler(e) {
-        // TODO: handle click on tower places
         this.game.click = true;
         const raycast = new Raycast();
 
