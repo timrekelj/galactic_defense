@@ -50,12 +50,8 @@ export class GameState {
         this.game = null;
         // this.game = new Game(this.loader, this.scene);
 
-        this.updateSystem = null;
-        // this.updateSystem = new UpdateSystem({ update: this.update, render: this.render });
-        this.resizeSystem = new ResizeSystem({ canvas: this.canvas, resize: this.resize }).start();
-    }
-
         this.song = null;
+
         try{
             this.song = new Audio("./assets/sounds/song.mp3");
             this.song.volume = 0.1;
@@ -65,26 +61,14 @@ export class GameState {
         }
 
 
+        this.updateSystem = null;
+        // this.updateSystem = new UpdateSystem({ update: this.update, render: this.render });
+
         this.updateSystem = new UpdateSystem({ update: this.update, render: this.render });
         new ResizeSystem({ canvas: this.canvas, resize: this.resize }).start();
     }
 
-    // init game, then start the update and render continuously
-    start(){
-        this.game.init();
-    // init game
-    init(){
-        // console.log("INIT?");
-        // this.game.init();
-        // console.log(this.updateSystem);
-        // if(this.updateSystem !== null){
-        //     console.log("EXISTS!!!");
-        //     this.updateSystem.stop();
-        //     delete this.updateSystem();
-        // }
-        // this.updateSystem = new UpdateSystem({ update: this.update, render: this.render });
-    }
-
+    //init game if not yet
     //start the update and render continuously
     start(){
         if(this.game === null){
@@ -105,6 +89,7 @@ export class GameState {
 
         this.updateSystem.start();
         this.changeMenueVisibility(document.querySelector(".game-ui"), null)
+
         if(this.song !== null){
             this.song.play();
         }
@@ -113,9 +98,10 @@ export class GameState {
     // Stop the update and render loop
     stop(){
         this.updateSystem.stop();
-        this.changeMenueVisibility(null, document.querySelector(".game-ui"))
+        this.changeMenueVisibility(null, document.querySelector(".game-ui"));
+        
         if(this.song !== null){
-            this.song.stop();
+            this.song.pause();
         }
     }
 
