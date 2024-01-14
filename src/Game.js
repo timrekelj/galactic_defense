@@ -44,12 +44,12 @@ export class Game {
         // FIX: Place turret (this is just for testing, delete when proper turret placement is implemented)
         const temp_turret = this.loader.loadNode('Tower').clone();
         temp_turret.getComponentOfType(Transform).translation = this.level_data.tower_places[1];
-        temp_turret.addComponent(new Turret(this.scene, temp_turret, this.level_data.tower_places[20]));
+        temp_turret.addComponent(new Turret(this.scene, temp_turret, this.level_data.tower_places[20], this.loader));
         this.scene.addChild(temp_turret);
 
         const temp_turre = this.loader.loadNode('Tower').clone();
         temp_turre.getComponentOfType(Transform).translation = this.level_data.tower_places[1];
-        temp_turre.addComponent(new Turret(this.scene, temp_turre, this.level_data.tower_places[6]));
+        temp_turre.addComponent(new Turret(this.scene, temp_turre, this.level_data.tower_places[6], this.loader));
         this.scene.addChild(temp_turre);
 
         this.spawnShip();
