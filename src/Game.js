@@ -4,6 +4,7 @@ import {
     Mesh,
     Model,
 } from '../engine/core.js'
+import commonEventEmitter from './EventEmitter.js';
 
 import { Ship } from './Ship.js'
 import { Turret } from './Turret.js'
@@ -61,6 +62,11 @@ export class Game {
         document.querySelector('.lives_number').innerHTML = this.lives;
         document.querySelector('.money_number').innerHTML = this.money;
 
+        //check if lost
+        if(this.lives <= 0){
+            commonEventEmitter.emit("gameOver", "lose")
+        }
+
         // controls
         if (this.enter_pressed) {
             this.placeTower();
@@ -102,9 +108,9 @@ export class Game {
         }
 
         if (this.placed_towers.length == this.level_data.tower_places.length) {
-            console.log('You win!');
             this.loader.loadNode('TowerPlaceChosen').destroy();
-            // TODO: show win screen?
+
+            commonEventEmitter.emit('gameOver', 'win');
             return;
         }
 

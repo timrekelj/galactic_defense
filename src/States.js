@@ -10,10 +10,11 @@ import {
     Node,
     Transform,
 } from './../engine/core.js'
+import commonEventEmitter from './EventEmitter.js'
 
 
 export class GameState {
-    constructor(canvas, renderer, loader) {
+    constructor(canvas, renderer, loader, stackReference) {
         this.update = this.update.bind(this);
         this.render = this.render.bind(this);
         this.resize = this.resize.bind(this);
@@ -23,6 +24,7 @@ export class GameState {
         this.renderer = renderer;
         this.loader = loader;
         this.canvas = canvas;
+        this.stackReference = stackReference;
 
         this.scene = this.loader.loadScene(this.loader.defaultScene);
         if (!this.scene) { throw new Error('A default scene is required'); }
@@ -69,6 +71,16 @@ export class GameState {
 
         this.updateSystem = new UpdateSystem({ update: this.update, render: this.render });
         new ResizeSystem({ canvas: this.canvas, resize: this.resize }).start();
+
+        commonEventEmitter.on("gameOver", (data) => {
+            console.log("GOT EMITTER");
+            if(data === "win"){
+                this.stackReference.win();
+            }
+            else if(data === "lose"){
+                this.stackReference.lose();
+            }
+        });
     }
 
     //init game if not yet
@@ -319,4 +331,127 @@ export class SimplePauseMenuState {
         menuToHide?.classList.add("invisible");
     }
 }
+
+export class SimpleWinMenuState {
+    constructor(document, stackReference) {
+        this.stackReference = stackReference;
+
+        this.gameCanvas = document.querySelector(".game-canvas")
+        this.overlay = document.querySelector(".overlay");
+        this.container = document.querySelector(".container");
+
+        // Menus
+        this.menu = document.querySelector("#win-menu");
+
+        // Buttons
+        this.confirmExitBtn = document.querySelector("#winBackToMainBtn");
+
+        // event listeners
+        this.container.addEventListener("pointerdown", (event) =>{
+            // prevent game to "steal" mouse event
+            //https://stackoverflow.com/questions/13966734/child-element-click-event-trigger-the-parent-click-event
+            event.stopPropagation();
+        });
+
+        this.confirmExitBtn.addEventListener('pointerdown', (event) => {
+            console.log("EXIT: " + this.stackReference.stateStack.length);
+            try {
+                // this remove the menu
+                this.stackReference.popState(); 
+
+                // this removes the game under the menu (game is seen behing the menu)
+                this.stackReference.popState();
+
+            } catch (error) {
+                console.error("Can't pop state from stack: " + error);
+            }
+
+            this.changeMenueVisibility(null, this.gameCanvas);
+            this.stackReference.pushState(this.stackReference.welcomeMenu);
+
+            //this is probably not a good solution to do that here...
+            // this.stackReference.gs.game = undefined;
+            this.stackReference.destroyGameStateInstance();
+            console.log("EXIT: " + this.stackReference.stateStack.length);
+        });
+
+    }
+
+    start(){
+        this.changeMenueVisibility(this.menu, null);
+        this.changeMenueVisibility(this.overlay, null);
+    }
+
+    stop(){
+        this.changeMenueVisibility(null, this.overlay);
+        this.changeMenueVisibility(null, this.menu);
+    }
+
+    //TODO this can be optimised with loop to go over all menus and only set one to visible (this can be more dynamic then)
+    changeMenueVisibility(menuToShow, menuToHide){
+        menuToShow?.classList.remove("invisible");
+        menuToShow?.classList.add("visible");
+
+        menuToHide?.classList.remove("visible");
+        menuToHide?.classList.add("invisible");
+    }
+}
+
+export class SimpleLoseMenuState {
+    constructor(document, stackReference) {
+        this.stackReference = stackReference;
+
+        this.gameCanvas = document.querySelector(".game-canvas")
+        this.overlay = document.querySelector(".overlay");
+        this.container = document.querySelector(".container");
+
+        // Menus
+        this.menu = document.querySelector("#lose-menu");
+
+        // Buttons
+        this.confirmExitBtn = document.querySelector("#loseBackToMainBtn");
+
+        // event listeners
+        this.container.addEventListener("pointerdown", (event) =>{
+            // prevent game to "steal" mouse event
+            //https://stackoverflow.com/questions/13966734/child-element-click-event-trigger-the-parent-click-event
+            event.stopPropagation();
+        });
+
+        this.confirmExitBtn.addEventListener('pointerdown', (event) => {
+            try {
+                this.stackReference.popState();
+            } catch (error) {
+                console.error("Can't pop state from stack: " + error);
+            }
+
+            this.changeMenueVisibility(null, this.gameCanvas);
+            this.stackReference.pushState(this.stackReference.welcomeMenu);
+
+            //this is probably not a good solution to do that here...
+            // this.stackReference.gs.game = undefined;
+            this.stackReference.destroyGameStateInstance();
+        });
+    }
+
+    start(){
+        this.changeMenueVisibility(this.menu, null);
+        this.changeMenueVisibility(this.overlay, null);
+    }
+
+    stop(){
+        this.changeMenueVisibility(null, this.overlay);
+        this.changeMenueVisibility(null, this.menu);
+    }
+
+    //TODO this can be optimised with loop to go over all menus and only set one to visible (this can be more dynamic then)
+    changeMenueVisibility(menuToShow, menuToHide){
+        menuToShow?.classList.remove("invisible");
+        menuToShow?.classList.add("visible");
+
+        menuToHide?.classList.remove("visible");
+        menuToHide?.classList.add("invisible");
+    }
+}
+
 // If you wish you can implement new (game) states, like in game menus

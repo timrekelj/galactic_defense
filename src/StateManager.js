@@ -1,4 +1,4 @@
-import { GameState, SimplePauseMenuState, SimpleWelcomeMenuState } from './States.js'
+import { GameState, SimplePauseMenuState, SimpleWelcomeMenuState, SimpleWinMenuState, SimpleLoseMenuState } from './States.js'
 
 export class StateManager {
     constructor(canvas, renderer, loader, document) {
@@ -21,6 +21,8 @@ export class StateManager {
         
         this.welcomeMenu = new SimpleWelcomeMenuState(this.document, this);
         this.pauseMenu = new SimplePauseMenuState(this.document, this);
+        this.winMenu = new SimpleWinMenuState(this.document, this);
+        this.loseMenu = new SimpleLoseMenuState(this.document, this);
         this.pushState(this.welcomeMenu);
         }
 
@@ -30,10 +32,40 @@ export class StateManager {
         if(this.gs){
             return this.gs;
         } else {
-            this.gs = new GameState(this.canvas, this.renderer, this.loader);
+            this.gs = new GameState(this.canvas, this.renderer, this.loader, this);
 
             return this.gs;
         }
+    }
+
+    win(){
+        console.log("Log from win");
+        console.log(this.getCurrentState());
+        console.log(this.stateStack.length);
+        this.pushState(this.winMenu)
+
+        console.log(this.getCurrentState());
+        console.log(this.stateStack.length);
+    }
+
+    lose(){
+        console.log("Log from win");
+        console.log(this.getCurrentState());
+        console.log(this.stateStack.length);
+        this.pushState(this.loseMenu)
+
+        console.log(this.getCurrentState());
+        console.log(this.stateStack.length);
+    }
+
+    //TODO: research this
+    // for some reason when you win and go back to main menu, the stack is just filling up and not cleaning old states
+    // workaround -> when win menu calls to go back to welcome menu it will empty stack
+    //I THINK, the win event is emitted more than once.... but not sure
+    resetStack(){
+    //UPDATE, this is not even used, if you use it it will crash the game
+        console.log("reset stack");
+        this.stateStack = [];
     }
 
     //we need this so when player exits the game, it destroy game state instance and it's data. 
