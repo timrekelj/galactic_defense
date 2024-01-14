@@ -57,7 +57,7 @@ export class Game {
 
     update(t, dt) {
         // UI update
-        document.querySelector('.time_number').innerHTML = Math.floor(t) + ' s';
+//        document.querySelector('.time_number').innerHTML = Math.floor(t) + ' s';
         document.querySelector('.score_number').innerHTML = this.score;
         document.querySelector('.lives_number').innerHTML = this.lives;
         document.querySelector('.money_number').innerHTML = this.money;
