@@ -60,11 +60,8 @@ export class Renderer extends BaseRenderer {
         gl.uniformMatrix4fv(uniforms.uViewMatrix, false, viewMatrix);
         gl.uniformMatrix4fv(uniforms.uProjectionMatrix, false, projectionMatrix);
 
+        // light setup
         const lights = scene.filter(node => node.getComponentOfType(Light));
-        // Set up lights
-        // get 5 closest lights
-        // TODO: sort lights by distance?
-
         const lightPositions = []
         lights.slice(0, 5).forEach(light => {
             const lightMatrix = getGlobalModelMatrix(light);

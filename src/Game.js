@@ -57,7 +57,6 @@ export class Game {
 
     update(t, dt) {
         // UI update
-//        document.querySelector('.time_number').innerHTML = Math.floor(t) + ' s';
         document.querySelector('.score_number').innerHTML = this.score;
         document.querySelector('.lives_number').innerHTML = this.lives;
         document.querySelector('.money_number').innerHTML = this.money;
@@ -72,29 +71,28 @@ export class Game {
             this.placeTower();
 
             // move chosen tower place to the next open place
-            while (this.placed_towers.includes(this.chosen_tower_place)) {
-                this.chosen_tower_place++;
+            if (this.placed_towers.length != this.level_data.tower_places.length) {
+                while (this.placed_towers.includes(this.chosen_tower_place)) {
+                    this.chosen_tower_place = (this.chosen_tower_place + 1) % this.level_data.tower_places.length;
+                }
+            } else {
+                this.loader.loadNode('TowerPlaceChosen').destroy();
             }
-
             this.enter_pressed = false;
         } else if (this.left_pressed) {
-            if (this.chosen_tower_place != 0) {
-                this.chosen_tower_place--;
+            this.chosen_tower_place = this.chosen_tower_place > 0 ? this.chosen_tower_place - 1 : this.tower_places.length - 1;
 
-                // skip over placed towers
-                while (this.placed_towers.includes(this.chosen_tower_place)) {
-                    this.chosen_tower_place--;
-                }
+            // skip over placed towers
+            while (this.placed_towers.includes(this.chosen_tower_place)) {
+                this.chosen_tower_place = this.chosen_tower_place > 0 ? this.chosen_tower_place - 1 : this.tower_places.length - 1;
             }
             this.left_pressed = false;
         } else if (this.right_pressed) {
-            if (this.chosen_tower_place != this.level_data.tower_places.length - 1) {
-                this.chosen_tower_place++;
+            this.chosen_tower_place = (this.chosen_tower_place + 1) % this.level_data.tower_places.length;
 
-                // skip over placed towers
-                while (this.placed_towers.includes(this.chosen_tower_place)) { 
-                    this.chosen_tower_place++;
-                }
+            // skip over placed towers
+            while (this.placed_towers.includes(this.chosen_tower_place)) { 
+                this.chosen_tower_place = (this.chosen_tower_place + 1) % this.level_data.tower_places.length;
             }
             this.right_pressed = false;
         }

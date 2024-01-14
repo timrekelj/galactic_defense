@@ -73,9 +73,9 @@ export class GameState {
 
         // add controller to camera
         this.camera.addComponent(new InputController(this.game, this.camera, document.body, {
-            distance: 300,
-            yaw: Math.PI / 2,
-            pitch: -(Math.PI / 2),
+            distance: 200,
+            yaw: Math.PI / 4,
+            pitch: -(Math.PI / 5),
         }));
 
         this.updateSystem = null;

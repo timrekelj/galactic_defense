@@ -14,11 +14,13 @@ export class Ship {
         this.game = game;
         this.alive = true;
 
+        this.sin_counter = Math.random() * 100;
+        
         this.parent.getComponentOfType(Transform).translation = [...this.path[0]];
     }
 
     update(t, dt) {
-        this.move(dt);
+        this.move(t, dt);
     }
 
     takeDamage(damage) {
@@ -41,7 +43,7 @@ export class Ship {
         }
     }
 
-    move(dt) {
+    move(t, dt) {
         const distance = vec3.distance(this.parent.getComponentOfType(Transform).translation, this.path[this.targetPathIndex]);
 
         if (distance < 1) {
@@ -62,7 +64,10 @@ export class Ship {
 
         this.parent.getComponentOfType(Transform).rotation = rotation;
 
+        // move towards direction and use sin and cos to move up and down
+        this.sin_counter += dt;
         vec3.normalize(direction, direction);
+        direction[1] = Math.sin(this.sin_counter * 6) / 6;
         vec3.scale(direction, direction, this.speed * dt);
         vec3.add(this.parent.getComponentOfType(Transform).translation, this.parent.getComponentOfType(Transform).translation, direction);
     }
