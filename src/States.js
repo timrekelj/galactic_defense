@@ -51,6 +51,11 @@ export class GameState {
 
         this.game = null;
         // this.game = new Game(this.loader, this.scene);
+        if(this.game === null){
+            this.game = new Game(this.loader, this.scene);
+            this.updateSystem = new UpdateSystem({ update: this.update, render: this.render });
+            this.game.init();
+        }
 
         this.song = null;
 
@@ -65,6 +70,13 @@ export class GameState {
         // Camera and turntable setup
         this.camera = this.scene.find(node => node.getComponentOfType(Camera));
         if (!this.camera) { throw new Error('A camera is required'); }
+
+        // add controller to camera
+        this.camera.addComponent(new InputController(this.game, this.camera, document.body, {
+            distance: 300,
+            yaw: Math.PI / 2,
+            pitch: -(Math.PI / 2),
+        }));
 
         this.updateSystem = null;
         // this.updateSystem = new UpdateSystem({ update: this.update, render: this.render });
@@ -86,19 +98,6 @@ export class GameState {
     //init game if not yet
     //start the update and render continuously
     start(){
-        if(this.game === null){
-            this.game = new Game(this.loader, this.scene);
-            this.updateSystem = new UpdateSystem({ update: this.update, render: this.render });
-            this.game.init();
-        }
-
-        // add controller to camera
-       this.camera.addComponent(new InputController(this.game, this.camera, document.body, {
-            distance: 300,
-            yaw: Math.PI / 2,
-            pitch: -(Math.PI / 2),
-        }));
-
        this.updateSystem.start();
         this.changeMenueVisibility(document.querySelector(".game-ui"), null)
 
