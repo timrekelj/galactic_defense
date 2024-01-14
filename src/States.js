@@ -37,7 +37,6 @@ export class GameState {
         this.loader.loadNode('Laser').getComponentOfType(Transform).translation = [0, 1000, 0];
 
         // Light setup
-        // TODO: if there is time, add support for multiple lights (first for Point light, then for Spot and Sun light)
         let temp;
         for (const node of this.loader.gltf.nodes) {
             if (node.name.startsWith('Light')) {

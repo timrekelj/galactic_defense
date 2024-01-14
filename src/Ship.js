@@ -30,7 +30,7 @@ export class Ship {
             this.parent.destroy();
             this.game.score += this.score_reward
             this.game.money += this.money_reward;
-            // TODO: add sound on death? (this is easy with javascript class Audio - just create new Audio('path/to/file.mp3') and call .play() on it)
+
             try {
                 const explosion = new Audio("./assets/sounds/explosion-short.wav");
                 explosion.volume = 0.5;
@@ -43,14 +43,17 @@ export class Ship {
 
     move(dt) {
         const distance = vec3.distance(this.parent.getComponentOfType(Transform).translation, this.path[this.targetPathIndex]);
+
         if (distance < 1) {
             this.targetPathIndex++;
         }
+
         if (this.targetPathIndex >= this.path.length) {
             this.game.lives--;
             this.parent.destroy();
             return;
         }
+
         const direction = vec3.subtract(vec3.create(), this.path[this.targetPathIndex], this.parent.getComponentOfType(Transform).translation);
 
         // rotate towards direction

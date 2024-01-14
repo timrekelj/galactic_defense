@@ -30,7 +30,7 @@ export class StateManager {
         if(this.gs){
             return this.gs;
         } else {
-            this.gs = new GameState(this.canvas, this.renderer, this.loader); //TODO also stop resizing?
+            this.gs = new GameState(this.canvas, this.renderer, this.loader);
 
             return this.gs;
         }

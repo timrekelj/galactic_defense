@@ -104,15 +104,9 @@ export class Game {
         if (this.placed_towers.length == this.level_data.tower_places.length) {
             console.log('You win!');
             this.loader.loadNode('TowerPlaceChosen').destroy();
-            // TODO: show win screen
+            // TODO: show win screen?
             return;
         }
-
-        // FIX: this is only for testing
-        const turret = this.loader.loadNode('Tower').clone();
-        turret.getComponentOfType(Transform).translation = this.level_data.tower_places[1];
-        turret.addComponent(new Turret(this.scene, turret, this.level_data.tower_places[5], this.loader));
-        this.scene.addChild(turret);
 
         this.chosenPlace();
     }
@@ -125,14 +119,15 @@ export class Game {
     }
 
     placeTower() {
-        // if (this.money < this.turret_price) {
-        //     return;
-        // }
-        // this.money -= this.turret_price;
+        // TODO: balance the game
+        if (this.money < this.turret_price) {
+            return;
+        }
+        this.money -= this.turret_price;
 
         this.placed_towers.push(this.chosen_tower_place);
 
-        // this.chooseTowerPlace(this.click_ray);
+        // place tower on chosen place
         const turret = this.loader.loadNode('Tower').clone();
         turret.getComponentOfType(Transform).translation = this.level_data.tower_places[1];
         turret.addComponent(new Turret(this.scene, turret, this.level_data.tower_places[this.chosen_tower_place], this.loader));

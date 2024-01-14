@@ -14,26 +14,19 @@ export class Turret {
         this.parent = parent;
         this.scene = scene;
         this.loader = loader;
-        this.is_rotating = false;
         this.parent.getComponentOfType(Transform).translation = [...this.turret_place];
 
         this.laser = this.loader.loadNode("Laser").clone();
-        this.laser.getComponentOfType(Transform).translation = [...this.turret_place];
-        this.laser.getComponentOfType(Transform).scale = [0.1, 0.1, 0.1];  // would be better if we move it "inside" turret and then scale out, this way it's out of the turret but size is [0.1, 0.1, 0.1]
+        this.laser.getComponentOfType(Transform).translation = [this.turret_place[0], 6, this.turret_place[2]];
         this.scene.addChild(this.laser);
     }
 
     update(t, dt) {
-        this.laser.getComponentOfType(Transform).scale = [0.1, 0.1, 0.1];
+        // get distance to target
         this.findTarget();
 
         if (this.target !== null) {
-            
-            let rotation = this.rotate(dt);
-            // this.laser.getComponentOfType(Transform).rotation = rotation;
-            // this.scene.addChild(this.laser);
-
-            // let laser = this.makeLaser(rotation);
+            this.rotate(dt); // get rotation
 
             this.shoot(dt);
         }
@@ -46,6 +39,7 @@ export class Turret {
             this.target !== null && vec3.distance(this.target.getComponentOfType(Transform).translation, this.turret_place) > this.range
         ) {
             this.target = null;
+            this.laser.getComponentOfType(Transform).scale = [1, 1, 1];
         }
         
         // find new target
@@ -68,29 +62,31 @@ export class Turret {
         const direction = vec3.subtract(vec3.create(), target_position, turret_position);
         const rotation = quat.rotateY(quat.create(), quat.create(), Math.atan2(direction[0], direction[2]) + Math.PI);
         quat.slerp(this.parent.getComponentOfType(Transform).rotation, this.parent.getComponentOfType(Transform).rotation, rotation, this.rotation_speed * dt);
-        this.parent.getComponentOfType(Transform).rotation = rotation;
 
-        // this.laser.getComponentOfType(Transform).rotation = rotation;
+        this.parent.getComponentOfType(Transform).rotation = rotation; // apply rotation to turret
 
-        // console.log(this.parent.getComponentOfType(Transform).rotation);
-        // console.log(this.laser.getComponentOfType(Transform).rotation);
-        return rotation;
+        // rotate laser
+        const laser_rotation = quat.rotateY(quat.create(), quat.create(), Math.atan2(direction[0], direction[2]) + Math.PI);
+        quat.slerp(this.laser.getComponentOfType(Transform).rotation, this.laser.getComponentOfType(Transform).rotation, laser_rotation, this.rotation_speed * dt);
+        this.laser.getComponentOfType(Transform).rotation = laser_rotation; // apply rotation to laser
     }
 
     shoot(dt) {
         this.time_since_last_shot += dt;
 
-        // If the turret is rotating, it can't shoot
-        if (this.is_rotating) { return; }
+        if (this.time_since_last_shot > .1) {
+            // reset laser length
+            this.laser.getComponentOfType(Transform).scale = [1, 1, 1];
+        }
 
         if (this.time_since_last_shot > this.shoot_rate) {
-            this.laser.getComponentOfType(Transform).scale = [1, 5, 1];
+            // set laser length
+            const distance = (vec3.distance(this.target.getComponentOfType(Transform).translation, this.turret_place) / 2) - .5;
+            // vec3.lerp scale
+            this.laser.getComponentOfType(Transform).scale = [1, 1, distance];
+
             this.time_since_last_shot = 0;
             this.target.getComponentOfType(Ship).takeDamage(this.damage);
-
-            // TODO: spawn bullet or do something to visualize the shot
-            // maybe just 3D line from turret to target
-            // TODO: add sound?
 
             try {
                 const explosion = new Audio("./assets/sounds/blaster-edit.wav");
@@ -99,6 +95,7 @@ export class Turret {
             } catch (error) {
                 throw new Error("Problems with sound: " + error)
             }
+            
         }
     }
 }

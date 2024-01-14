@@ -77,7 +77,6 @@ export class Node {
 
     // INFO: new function
     destroy() {
-        // TODO: fix this because it still exists in the scene
         this.parent?.removeChild(this);
         this.children.forEach(child => child.destroy());
         this.components.forEach(component => component.destroy?.());
