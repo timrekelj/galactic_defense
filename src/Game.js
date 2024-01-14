@@ -1,8 +1,5 @@
 import {
     Transform,
-    Primitive,
-    Mesh,
-    Model,
 } from '../engine/core.js'
 import commonEventEmitter from './EventEmitter.js';
 
@@ -20,7 +17,7 @@ export class Game {
         this.scene = scene;
         this.canvas = canvas;
         this.time_since_last_spawn = 0;
-        this.spawn_rate = 300;
+        this.spawn_rate = 400;
         this.ship_counter = 0;
         this.placed_towers = [];
 
@@ -52,7 +49,7 @@ export class Game {
             this.tower_places.push(temp_tower_place);
         }
 
-        this.spawnShip();
+        this.spawnShip(5);
     }
 
     update(t, dt) {
@@ -101,8 +98,8 @@ export class Game {
         this.time_since_last_spawn += 100 * dt;
         if (this.time_since_last_spawn > this.spawn_rate) {
             this.time_since_last_spawn = 0;
-            this.spawn_rate *= 0.99;
-            this.spawnShip();
+            this.spawn_rate *= 0.95;
+            this.spawnShip(t);
         }
 
         if (this.placed_towers.length == this.level_data.tower_places.length) {
@@ -138,15 +135,17 @@ export class Game {
         this.scene.addChild(turret);
     }
 
-    spawnShip() {
+    spawnShip(t) {
         if (this.ship_counter < 10) {
             const ship = this.loader.loadNode('Ship01').clone();
-            ship.addComponent(new Ship(100, 10, 50, 10, this.level_data.path, ship, this));
+            ship.addComponent(new Ship(5 * t, 10, 50, 10, this.level_data.path, ship, this));
+            console.log(10 * t);
             this.scene.addChild(ship);
             this.ship_counter++;
-        } else if (this.ship_counter < 15) {
+        } else if (this.ship_counter < 20) {
             const ship = this.loader.loadNode('Ship02').clone();
-            ship.addComponent(new Ship(200, 7, 100, 50, this.level_data.path, ship, this));
+            ship.addComponent(new Ship(10 * t, 7, 80, 50, this.level_data.path, ship, this));
+            console.log(20 * t);
             this.scene.addChild(ship);
             this.ship_counter++;
         } else {
