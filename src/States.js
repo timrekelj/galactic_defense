@@ -9,7 +9,6 @@ import {
     Camera,
     Node,
     Transform,
-    Model
 } from './../engine/core.js'
 
 
@@ -31,6 +30,7 @@ export class GameState {
         // Move original nodes far away
         this.loader.loadNode('Road').getComponentOfType(Transform).translation = [0, 1000, 0];
         this.loader.loadNode('TowerPlace').getComponentOfType(Transform).translation = [0, 1000, 0];
+        this.loader.loadNode('TowerPlaceChosen').getComponentOfType(Transform).translation = [0, 1000, 0];
         this.loader.loadNode('Ship01').getComponentOfType(Transform).translation = [0, 1000, 0];
         this.loader.loadNode('Ship02').getComponentOfType(Transform).translation = [0, 1000, 0];
         this.loader.loadNode('Tower').getComponentOfType(Transform).translation = [0, 1000, 0];
@@ -40,7 +40,7 @@ export class GameState {
         // TODO: if there is time, add support for multiple lights (first for Point light, then for Spot and Sun light)
         let temp;
         for (const node of this.loader.gltf.nodes) {
-            if (node.name.startsWith('Point') || node.name.startsWith('Spot') || node.name.startsWith('Sun')) {
+            if (node.name.startsWith('Light')) {
                 temp = new Node();
                 temp.addComponent(new Light());
                 temp.addComponent(new Transform({ translation: node.translation }));
@@ -82,7 +82,7 @@ export class GameState {
         }
 
         // add controller to camera
-        this.camera.addComponent(new InputController(this.renderer, this.game, this.camera, document.body, {
+       this.camera.addComponent(new InputController(this.game, this.camera, document.body, {
             distance: 300,
             yaw: Math.PI / 2,
             pitch: -(Math.PI / 2),
@@ -191,7 +191,6 @@ export class SimpleWelcomeMenuState {
         });
 
         this.escKeyListener =(event) => {
-            console.log("key pressed");
             if(event.key === "Escape"){
                 try {
                     this.stackReference.popState();

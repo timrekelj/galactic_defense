@@ -28,18 +28,9 @@ export class StateManager {
     // probably not the best way to do it, but it works
     getGameState(){
         if(this.gs){
-            console.log(this.gs);
             return this.gs;
         } else {
-            console.log("should make new game");
-
             this.gs = new GameState(this.canvas, this.renderer, this.loader); //TODO also stop resizing?
-            // this.gs.init();
-
-//            console.log(this.gs.game.scene);
-
-            // this.pushState(this.gs);
-            // console.log(this.getCurrentState());
 
             return this.gs;
         }

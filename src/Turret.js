@@ -6,7 +6,7 @@ export class Turret {
     constructor(scene, parent, turret_place) {
         this.rotation_speed = 10;
         this.range = 30;
-        this.shoot_rate = .1;
+        this.shoot_rate = .5;
         this.damage = 10;
         this.time_since_last_shot = 0;
         this.target = null;
@@ -15,6 +15,8 @@ export class Turret {
         this.scene = scene;
         this.is_rotating = false;
         this.parent.getComponentOfType(Transform).translation = [...this.turret_place];
+
+        console.log(this.scene.filter(node => node.getComponentOfType(Turret)));
     }
 
     update(t, dt) {
@@ -27,9 +29,15 @@ export class Turret {
     }
 
     findTarget() {
-        if (this.target !== null && !this.target.getComponentOfType(Ship).alive) {
+        // lose target if it's dead or out of range
+        if (
+            this.target !== null && !this.target.getComponentOfType(Ship).alive ||
+            this.target !== null && vec3.distance(this.target.getComponentOfType(Transform).translation, this.turret_place) > this.range
+        ) {
             this.target = null;
         }
+        
+        // find new target
         this.scene.traverse(node => {
             if (
                 node.getComponentOfType(Ship) !== undefined &&

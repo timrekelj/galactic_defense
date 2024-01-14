@@ -2,12 +2,10 @@ import { quat, vec3 } from '../../../lib/gl-matrix-module.js';
 
 import { Transform } from '../core/Transform.js';
 
-import { Raycast } from '../core/Raycast.js';
-
 
 export class InputController {
 
-    constructor(renderer, game, node, domElement, {
+    constructor(game, node, domElement, {
         pitch = 0,
         yaw = 0,
         distance = 1,
@@ -16,7 +14,6 @@ export class InputController {
     } = {}) {
         this.node = node;
         this.game = game; 
-        this.renderer = renderer; // INFO: added renderer
         this.domElement = domElement;
 
         this.pitch = pitch;
@@ -34,9 +31,11 @@ export class InputController {
         this.pointerupHandler = this.pointerupHandler.bind(this);
         this.pointermoveHandler = this.pointermoveHandler.bind(this);
         this.wheelHandler = this.wheelHandler.bind(this);
+        this.keyboardHandler = this.keyboardHandler.bind(this);
 
         this.domElement.addEventListener('pointerdown', this.pointerdownHandler);
         this.domElement.addEventListener('wheel', this.wheelHandler);
+        this.domElement.addEventListener('keydown', this.keyboardHandler);
     }
 
     pointerdownHandler(e) {
@@ -45,8 +44,6 @@ export class InputController {
         this.domElement.removeEventListener('pointerdown', this.pointerdownHandler);
         this.domElement.addEventListener('pointerup', this.pointerupHandler);
         this.domElement.addEventListener('pointermove', this.pointermoveHandler);
-
-        this.clickHandler(e);
     }
 
     pointerupHandler(e) {
@@ -75,12 +72,14 @@ export class InputController {
         this.distance *= Math.exp(this.zoomSensitivity * e.deltaY);
     }
 
-    clickHandler(e) {
-        this.game.click = true;
-        const raycast = new Raycast();
-
-        raycast.sendRayFromCamera(e, this.node);
-        this.game.click_ray = raycast.ray;
+    keyboardHandler(e) {
+        if (e.key === 'Enter') {
+            this.game.enter_pressed = true;
+        } else if (e.key === 'ArrowLeft') {
+            this.game.left_pressed = true;
+        } else if (e.key === 'ArrowRight') {
+            this.game.right_pressed = true;
+        }
     }
 
     update() {

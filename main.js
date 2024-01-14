@@ -7,7 +7,6 @@ import { StateManager } from './src/StateManager.js'
 
 //this needs to be first otherwise renderer.initialise prevents this to be triggered
 document.addEventListener("DOMContentLoaded", (event) => {
-    console.log("page is fully loaded");
     document.querySelector('.loader-container').remove();
   });
 

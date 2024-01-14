@@ -60,11 +60,30 @@ export class Renderer extends BaseRenderer {
         gl.uniformMatrix4fv(uniforms.uViewMatrix, false, viewMatrix);
         gl.uniformMatrix4fv(uniforms.uProjectionMatrix, false, projectionMatrix);
 
+        const lights = scene.filter(node => node.getComponentOfType(Light));
         // Set up lights
-        const light = scene.find(node => node.getComponentOfType(Light));
-        const lightMatrix = getGlobalModelMatrix(light);
-        const lightPosition = mat4.getTranslation(vec3.create(), lightMatrix);
-        gl.uniform3fv(uniforms.uLightPosition, lightPosition);
+        // get 5 closest lights
+        lights.sort((a, b) => {
+            const aMatrix = getGlobalModelMatrix(a);
+            const bMatrix = getGlobalModelMatrix(b);
+            const aPosition = mat4.getTranslation(vec3.create(), aMatrix);
+            const bPosition = mat4.getTranslation(vec3.create(), bMatrix);
+            const cameraPosition = getGlobalModelMatrix(camera);
+            const aDistance = vec3.distance(aPosition, cameraPosition);
+            const bDistance = vec3.distance(bPosition, cameraPosition);
+            return aDistance - bDistance;
+        });
+
+        const lightPositions = []
+        lights.slice(0, 5).forEach(light => {
+            const lightMatrix = getGlobalModelMatrix(light);
+            const lightPosition = mat4.getTranslation(vec3.create(), lightMatrix);
+            lightPositions.push(lightPosition);
+        });
+
+        lightPositions.forEach((lightPosition, index) => {
+            gl.uniform3fv(uniforms.uLightPosition[index], lightPosition);
+        });
 
         this.renderNode(scene);
     }

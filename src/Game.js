@@ -1,5 +1,8 @@
 import {
     Transform,
+    Primitive,
+    Mesh,
+    Model,
 } from '../engine/core.js'
 
 import { Ship } from './Ship.js'
@@ -7,10 +10,9 @@ import { Turret } from './Turret.js'
 
 export class Game {
     constructor(loader, scene, canvas) {
-        this.click = false;
-        this.click_ray = [0, 0, 0];
         this.lives = 10;
         this.score = 0;
+        this.chosen_tower_place = 0;
         this.turret_price = 100;
         this.money = this.turret_price;
         this.loader = loader;
@@ -19,6 +21,12 @@ export class Game {
         this.time_since_last_spawn = 0;
         this.spawn_rate = 300;
         this.ship_counter = 0;
+        this.placed_towers = [];
+
+        // controls
+        this.enter_pressed = false;
+        this.left_pressed = false;
+        this.right_pressed = false;
     }
     
     async init() {
@@ -35,22 +43,13 @@ export class Game {
         }
 
         // Place tower places
+        this.tower_places = [];
         for (let i = 0; i < this.level_data.tower_places.length; i++) {
             const temp_tower_place = this.loader.loadNode('TowerPlace').clone();
             temp_tower_place.getComponentOfType(Transform).translation = this.level_data.tower_places[i];
             this.scene.addChild(temp_tower_place);
+            this.tower_places.push(temp_tower_place);
         }
-
-        // FIX: Place turret (this is just for testing, delete when proper turret placement is implemented)
-        const temp_turret = this.loader.loadNode('Tower').clone();
-        temp_turret.getComponentOfType(Transform).translation = this.level_data.tower_places[1];
-        temp_turret.addComponent(new Turret(this.scene, temp_turret, this.level_data.tower_places[20]));
-        this.scene.addChild(temp_turret);
-
-        const temp_turre = this.loader.loadNode('Tower').clone();
-        temp_turre.getComponentOfType(Transform).translation = this.level_data.tower_places[1];
-        temp_turre.addComponent(new Turret(this.scene, temp_turre, this.level_data.tower_places[6]));
-        this.scene.addChild(temp_turre);
 
         this.spawnShip();
     }
@@ -62,6 +61,38 @@ export class Game {
         document.querySelector('.lives_number').innerHTML = this.lives;
         document.querySelector('.money_number').innerHTML = this.money;
 
+        // controls
+        if (this.enter_pressed) {
+            this.placeTower();
+
+            // move chosen tower place to the next open place
+            while (this.placed_towers.includes(this.chosen_tower_place)) {
+                this.chosen_tower_place++;
+            }
+
+            this.enter_pressed = false;
+        } else if (this.left_pressed) {
+            if (this.chosen_tower_place != 0) {
+                this.chosen_tower_place--;
+
+                // skip over placed towers
+                while (this.placed_towers.includes(this.chosen_tower_place)) {
+                    this.chosen_tower_place--;
+                }
+            }
+            this.left_pressed = false;
+        } else if (this.right_pressed) {
+            if (this.chosen_tower_place != this.level_data.tower_places.length - 1) {
+                this.chosen_tower_place++;
+
+                // skip over placed towers
+                while (this.placed_towers.includes(this.chosen_tower_place)) { 
+                    this.chosen_tower_place++;
+                }
+            }
+            this.right_pressed = false;
+        }
+
         // Spawn ships at a rate that increases over time
         this.time_since_last_spawn += 100 * dt;
         if (this.time_since_last_spawn > this.spawn_rate) {
@@ -70,31 +101,36 @@ export class Game {
             this.spawnShip();
         }
 
-        if (this.click) {
-            this.click = false;
-            this.placeTower();
+        if (this.placed_towers.length == this.level_data.tower_places.length) {
+            console.log('You win!');
+            this.loader.loadNode('TowerPlaceChosen').destroy();
+            // TODO: show win screen
+            return;
         }
+
+        this.chosenPlace();
+    }
+
+    chosenPlace() {
+        // move chosen tower place to the chosen place
+        const temp_tower_place_chosen = this.loader.loadNode('TowerPlaceChosen');
+        temp_tower_place_chosen.getComponentOfType(Transform).translation = this.level_data.tower_places[this.chosen_tower_place];
+        temp_tower_place_chosen.getComponentOfType(Transform).translation[1] = 1;
     }
 
     placeTower() {
-        // TODO: check if enough money
         if (this.money < this.turret_price) {
             return;
         }
         this.money -= this.turret_price;
 
+        this.placed_towers.push(this.chosen_tower_place);
+
         // this.chooseTowerPlace(this.click_ray);
         const turret = this.loader.loadNode('Tower').clone();
         turret.getComponentOfType(Transform).translation = this.level_data.tower_places[1];
-        turret.addComponent(new Turret(this.scene, turret, this.level_data.tower_places[this.chooseTowerPlace()]));
+        turret.addComponent(new Turret(this.scene, turret, this.level_data.tower_places[this.chosen_tower_place]));
         this.scene.addChild(turret);
-    }
-
-    chooseTowerPlace() {
-        // TODO: collision detection for tower places with raycast
-        console.log(this.click_ray);
-
-        return 1;
     }
 
     spawnShip() {
