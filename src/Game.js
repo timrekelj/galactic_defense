@@ -98,7 +98,7 @@ export class Game {
         this.time_since_last_spawn += 100 * dt;
         if (this.time_since_last_spawn > this.spawn_rate) {
             this.time_since_last_spawn = 0;
-            this.spawn_rate *= 0.95;
+            this.spawn_rate *= 0.98;
             this.spawnShip(t);
         }
 
